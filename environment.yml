@@ -1,0 +1,40 @@
+name: scrapingOOP
+channels:
+  - defaults
+dependencies:
+  - bzip2=1.0.8=h6c40b1e_5
+  - ca-certificates=2024.3.11=hecd8cb5_0
+  - libffi=3.4.4=hecd8cb5_0
+  - ncurses=6.4=hcec6c5f_0
+  - openssl=3.0.13=hca72f7f_0
+  - pip=23.3.1=py311hecd8cb5_0
+  - python=3.11.8=hf27a42d_0
+  - readline=8.2=hca72f7f_0
+  - setuptools=68.2.2=py311hecd8cb5_0
+  - sqlite=3.41.2=h6c40b1e_0
+  - tk=8.6.12=h5d9f67b_0
+  - tzdata=2024a=h04d1e81_0
+  - wheel=0.41.2=py311hecd8cb5_0
+  - xz=5.4.6=h6c40b1e_0
+  - zlib=1.2.13=h4dc903c_0
+  - pip:
+    - attrs==23.2.0
+    - certifi==2024.2.2
+    - charset-normalizer==3.3.2
+    - h11==0.14.0
+    - idna==3.6
+    - outcome==1.3.0.post0
+    - prettyprint==0.1.5
+    - pysocks==1.7.1
+    - requests==2.31.0
+    - selenium==4.18.1
+    - sniffio==1.3.1
+    - sortedcontainers==2.4.0
+    - trio==0.25.0
+    - trio-websocket==0.11.1
+    - typing-extensions==4.10.0
+    - undetected-chromedriver==3.5.5
+    - urllib3==2.2.1
+    - websockets==12.0
+    - wsproto==1.2.0
+prefix: /usr/local/anaconda3/envs/scrapingOOP
