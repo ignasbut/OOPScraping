@@ -1,8 +1,8 @@
 import time
 from seleniumbase import Driver
-import selenium.webdriver.chrome.options
+# import selenium.webdriver.chrome.options -- most likely not needed
 from selenium.webdriver.support.ui import Select
-import undetected_chromedriver as uc
+# import undetected_chromedriver as uc -- this is probably useless now
 from selenium.common.exceptions import WebDriverException, NoSuchElementException, ElementClickInterceptedException
 from selenium.webdriver.remote.webdriver import By
 import selenium.webdriver.support.expected_conditions as EC
@@ -10,13 +10,25 @@ from selenium.webdriver.support.wait import WebDriverWait
 from bisect import bisect_left
 from listing_class import listing, listing_extension
 
-# opts = selenium.webdriver.chrome.options.Options()
-# options.add_argument('--blink-settings=imagesEnabled=false')
-# driver = uc.Chrome(headless=True)
+
 driver = Driver(uc=True, ad_block_on=True, headless=True)
 website = 'https://autogidas.lt/en/paieska/automobiliai'
 root = 'https://autogidas.lt/'
 
+
+def pinfo(*args):
+    print("[*] ", *args)
+
+
+def perror(*args):
+    print("[!] ", *args)
+
+
+def psuccess(*args):
+    print("[+] ", *args)
+
+
+# XPaths of the website search and listings
 xpaths = {
     "make_box": '//div[@id="f_1"]',
     "model_box": '//div[@id="f_model_14"]',
@@ -34,6 +46,7 @@ xpaths = {
     "captcha_accept": '//button[@id="onetrust-accept-btn-handler"]',
 }
 
+# Relative XPaths of the individual values within an individual listing
 relative_xpaths = {
     "link": './/a[@class="item-link "]',
     "year": './/span[contains(@class,"param-year")]/b',
@@ -46,7 +59,6 @@ relative_xpaths = {
 
 }
 
-# Remember that the index is +1 since there initially was a space at the start!
 price_values = [150, 300, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 6000, 7000, 8000, 9000, 10000,
                 12500, 15000, 17500, 20000, 25000, 30000, 45000, 60000, 70000, 80000, 90000, 100000]
 
@@ -55,27 +67,35 @@ year_values = [1925, 1927, 1930, 1940, 1950, 1960, 1965, 1970, 1975, 1980, 1985,
                2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
 
 
+# Function that inputs text into text box
+# Need the XPath of the input box and the value itself.
 def enter_option(box_xpath, value):
     box = driver.find_element(By.XPATH, box_xpath)
+    pinfo("Box found")
     box.click()
-    print("clicked box")
+    psuccess("Box clicked")
     key_enter = WebDriverWait(driver, timeout=3).until(
         EC.presence_of_element_located((By.XPATH, f'{box_xpath}/div/div[@class="input-text"]/input[@type="text"]'))
     )
-    print("Found input box")
+    pinfo("Found input box")
+    pinfo("Sending keys")
     key_enter.send_keys(value)
-    print("sent keys")
+    psuccess("Keys sent")
     opts = box.find_element(By.XPATH, './/div/div/div[@style="display: block;"]')
     opts.click()
+    psuccess("Option has been selected")
 
 
+# Selects the option from a dropdown list
+# Inputs = XPath of the dropdown menu, the value list, and the input value
 def select_dropdown(drop_xpath, value_list, value):
     value = take_closest(value_list, value)
-    print(f"value {value} was chosen")
+    pinfo(f"value {value} was chosen")
     selection = Select(driver.find_element(By.XPATH, drop_xpath))
     selection.select_by_value(str(value))
 
 
+# Chooses the closes of the list given the input value
 def take_closest(lst, value):
     pos = bisect_left(lst, value)
 
@@ -104,10 +124,9 @@ def search_fill(make, model=None, price_from=None, price_to=None, year_from=None
     if year_to is not None:
         select_dropdown(xpaths["year_to"], year_values, year_to)
     try:
-        # driver.find_element(By.XPATH, xpaths["but_submit"]).click()
         driver.execute_script("arguments[0].click();", driver.find_element(By.XPATH, xpaths["but_submit"]))
     except ElementClickInterceptedException:
-        driver.save_screenshot("click.png")
+        perror("Error when clicking submit!")
 
 
 def get_last_page():
@@ -116,6 +135,7 @@ def get_last_page():
         selections = container.find_elements(By.XPATH, './/a/div')
         page = selections[-2].text
     except NoSuchElementException:
+        pinfo("Next button not found, setting page to 1")
         page = 1
     return int(page)
 
@@ -126,7 +146,7 @@ def scrape(make):
     # lastpage = get_last_page()
     lastpage = 3
     for i in range(lastpage):
-        print(f"scraping page {i+1}")
+        pinfo(f"scraping page {i+1}")
         # find the listing container
         container = driver.find_element(By.XPATH, xpaths["list_container"])
         # get all elements that are listings
@@ -150,24 +170,30 @@ def scrape(make):
         if i+1 != lastpage:
             # driver.execute_script("arguments[0].click();", driver.find_element(By.XPATH, xpaths["but_next"]))
             driver.find_element(By.XPATH, xpaths["but_next"]).click()
-            # try:
-            #     driver.find_element(By.XPATH, xpaths["but_next"]).click()
-            # except ElementClickInterceptedException:
-            #     driver.switch_to.frame()
     return arr
 
 
 def captcha_accept():
+    pinfo("Looking for CAPTCHA")
     if EC.presence_of_element_located((By.XPATH, xpaths["captcha_accept"])):
+        pinfo("CAPTCHA found")
         driver.find_element(By.XPATH, xpaths["captcha_accept"]).click()
+        psuccess("CAPTCHA accepted")
 
 
 def main(make, model=None, price_from=None, price_to=None, year_from=None, year_to=None):
     # obj_arr = []
+    pinfo("Getting website")
     driver.get(website)
+    psuccess("Website accessed")
     captcha_accept()
+    pinfo("Filling search")
     search_fill(make, model, price_from, price_to, year_from, year_to)
+    psuccess("Search successfully filled")
+    pinfo("Starting to scrape pages")
     obj_arr = scrape(make)
-    time.sleep(4)
+    psuccess("Pages successfully scraped")
+    pinfo("Driver is quitting")
     driver.quit()
+    pinfo("Returning object array")
     return obj_arr
