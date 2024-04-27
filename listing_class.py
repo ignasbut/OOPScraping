@@ -1,5 +1,5 @@
 class listing:
-    def __init__(self, make=None, model=None, url=None, year=None, fuel_type=None, location=None, mileage=None, ) -> None:
+    def __init__(self, make=None, model=None, url=None, year=None, fuel_type=None, location=None, mileage=None, trans=None) -> None:
         self.make = make
         self.model = model
         self.year = year
@@ -7,9 +7,14 @@ class listing:
         self.mileage = mileage
         self.url = url
         self.location = location
+        self.trans = trans
 
     def update_attr(self, attr, val):
         setattr(self, attr, val)
+
+    def print_info(self):
+        print(f"Make: {self.make}\nModel: {self.model}\nYear: {self.year}\nFuel: {self.fuel_type}\n"
+              f"Mileage: {self.mileage}\nLink: {self.url}\nLocation: {self.location}\nGearbox: {self.trans}")
 
 
 class listing_extension(listing):

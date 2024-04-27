@@ -16,11 +16,12 @@ from listing_class import listing, listing_extension
 # However, AUTOGIDAS has a more reasonable and text-based search for URL generation
 
 
-objects = get_objects("Dodge")
+objects = get_objects("BMW")
 
-extended = listing_extension.from_listing(objects[1],"This is a description")
+# extended = listing_extension.from_listing(objects[1],"This is a description")
 
-# print(f"Number of scraped objects: {len(objects)}")
+print(f"Number of scraped objects: {len(objects)}")
 
-# for i in range(len(objects)):
-    # print(f"\n{i+1}. Make: {objects[i].make}\nModel: {objects[i].model}\n")
+for obj in objects:
+    print("--------------------------")
+    obj.print_info()
