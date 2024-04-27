@@ -1,5 +1,5 @@
 class listing:
-    def __init__(self, make, model, url=None, year=None, fuel_type=None, location=None, mileage=None, ) -> None:
+    def __init__(self, make=None, model=None, url=None, year=None, fuel_type=None, location=None, mileage=None, ) -> None:
         self.make = make
         self.model = model
         self.year = year
@@ -13,12 +13,16 @@ class listing:
 
 
 class listing_extension(listing):
-    def __init__(self, desc=None, color=None, defects=None, reserved=None):
+    def __init__(self, make=None, model=None, url=None, year=None, fuel_type=None, location=None, mileage=None,
+                 desc=None, color=None, defects=None, reserved=None):
+        super().__init__(make, model, url, year, fuel_type, location, mileage)
         self.desc = desc
         self.color = color
         self.defects = defects
         self.reserved = reserved
 
-    def update_attr(self, attr, val):
-        setattr(self, attr, val)
+    @classmethod
+    def from_listing(cls, listing_obj, desc=None, color=None, defects=None, reserved=None):
+        return cls(listing_obj.make, listing_obj.model, listing_obj.year, listing_obj.fuel_type, listing_obj.mileage,
+                   listing_obj.url, listing_obj.location, desc, color, defects, reserved)
 

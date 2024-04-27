@@ -119,7 +119,7 @@ def scrape(arr,make):
 def main(make, model=None, price_from=None, price_to=None, year_from=None, year_to=None):
     obj_arr = []
     driver.get(website)
-    search_fill(make,model, price_from, price_to, year_from, year_to)
+    search_fill(make, model, price_from, price_to, year_from, year_to)
     scrape(obj_arr, make)
     time.sleep(4)
     driver.quit()

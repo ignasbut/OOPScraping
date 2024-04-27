@@ -18,7 +18,9 @@ from listing_class import listing, listing_extension
 
 objects = get_objects("Dodge")
 
-print(f"Number of scraped objects: {len(objects)}")
+extended = listing_extension.from_listing(objects[1],"This is a description")
 
-for i in range(len(objects)):
-    print(f"\n{i+1}. Make: {objects[i].make}\nModel: {objects[i].model}\n")
+# print(f"Number of scraped objects: {len(objects)}")
+
+# for i in range(len(objects)):
+    # print(f"\n{i+1}. Make: {objects[i].make}\nModel: {objects[i].model}\n")
