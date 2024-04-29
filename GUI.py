@@ -1,70 +1,95 @@
-from car import Car
-#from database import load_cars_from_db, add_car_to_db
-
+import kivy
 from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.textinput import TextInput
-from kivy.uix.button import Button
-from kivy.uix.listview import ListView
+from kivy.lang import Builder
+from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
+from kivy.core.window import Window
+from kivy.uix.label import Label
+from kivy.uix.checkbox import CheckBox
+
+Builder.load_file('noticar.kv')
+class MyLayout(Widget):
 
 
-# import sqlite3
 
-conn = sqlite3.connect('cars.db')  # Replace 'cars.db' with your desired database name
-c = conn.cursor()
+    def brand_spinner_clicked(self, value):
+        self.ids.brand_spinner.text=value
 
-# Create table if it doesn't exist (Modify columns as needed)
-c.execute('''CREATE TABLE IF NOT EXISTS cars (
-                brand TEXT,
-                model TEXT,
-                year INTEGER,
-                mileage INTEGER,
-                transmission TEXT,
-                engine_volume REAL,
-                fuel_type TEXT,
-                driven_wheels TEXT
-            )''')
+    def mileage_from_clicked(self, value):
+        self.ids.mileage_from_spinner.text=value
 
-class NotiCar(App):
-    car_list = ObjectProperty([])
+    def mileage_to_clicked(self, value):
+        self.ids.mileage_to_spinner.text=value
 
-    def __init__(self, **kwargs):
-        super(NotiCar, self).__init__(**kwargs)
-        self.car_list = self.load_cars_from_db()
+    def transmission_clicked(self, value):
+        self.ids.transmission_spinner.text=value
 
+    def fuel_clicked(self, value):
+        self.ids.fuel_spinner.text=value
+
+    def driven_wheels_clicked(self, value):
+        self.ids.driven_wheels_spinner.text=value
+
+
+
+    brand_input=ObjectProperty(None)
+    model_input = ObjectProperty(None)
+    year_from_input = ObjectProperty(None)
+    year_to_input = ObjectProperty(None)
+    mileage_from_input=ObjectProperty(None)
+    mileage_to_input=ObjectProperty(None)
+    transmission_input=ObjectProperty(None)
+    engine_vol_input=ObjectProperty(None)
+    driven_wheels_input=ObjectProperty(None)
+    price_from_input=ObjectProperty(None)
+    price_to_input=ObjectProperty(None)
+
+    def press(self):
+        brand=self.ids.brand_spinner.text
+        model=self.model_input.text
+        year_from =self.year_from_input.text
+        year_to=self.year_to_input.text
+        mileage_from=self.ids.mileage_from_spinner.text
+        mileage_to = self.ids.mileage_to_spinner.text
+        transmission=self.ids.transmission_spinner.text
+        engine_vol=self.engine_vol_input.text
+        fuel=self.ids.fuel_spinner.text
+        driven_wheels=self.ids.driven_wheels_spinner.text
+        price_from = self.price_from_input.text
+        price_to = self.price_to_input.text
+
+
+
+
+        # Create a Label with search criteria
+        search_summary = Label(text=f"{brand} {model} {year_from} - {year_to} {mileage_from} - {mileage_to}km {transmission} {engine_vol}L {fuel} {driven_wheels} {price_from} - {price_to} Eur")
+
+        # Add the Label to the layout (assuming 'your_layout_id' is the parent)
+        self.ids.selected_car.add_widget(search_summary)
+
+        self.canvas.ask_update()
+
+
+        print(f'Brand: {brand}, model: {model}, year from: {year_from}, year to: {year_to}, mileage from: {mileage_from}, mileage to: {mileage_to}, transmission: {transmission}, engine volume: {engine_vol}, fuel type: {fuel}, driven wheels: {driven_wheels}, price from: {price_from}, price to: {price_to}')
+
+        self.ids.brand_spinner.text='Any'
+        self.model_input.text ='Any'
+        self.year_from_input.text ='Any'
+        self.year_to_input.text = 'Any'
+        self.ids.mileage_from_spinner.text='Any'
+        self.ids.mileage_to_spinner.text='Any'
+        self.ids.transmission_spinner.text='Any'
+        self.engine_vol_input.text='Any'
+        self.ids.fuel_spinner.text='Any'
+        self.ids.driven_wheels_spinner.text='Any'
+        self.price_from_input.text='Any'
+        self.price_to_input.text='Any'
+
+
+
+class NotiCarApp(App):
     def build(self):
-        main_layout = BoxLayout(orientation='vertical')
+        Window.clearcolor=(28/255.0, 99/255.0, 158/255.0, 0.75)
+        return MyLayout()
 
-        # Top row for input fields
-        top_row = BoxLayout(orientation='horizontal')
-        brand_input = TextInput(hint_text="Brand")
-        model_input = TextInput(hint_text="Model")
-        year_input = TextInput(hint_text="Year", input_filter='numeric')
-        mileage_input = TextInput(hint_text="Mileage (km)", input_filter='numeric')
-        transmission_input = TextInput(hint_text="Transmission")
-        engine_volume_input = TextInput(hint_text="Engine Volume (L)", input_filter='numeric')
-        fuel_type_input = TextInput(hint_text="Fuel Type")
-        driven_wheels_input = TextInput(hint_text="Driven Wheels")
-        top_row.add_widget(brand_input)
-        top_row.add_widget(model_input)
-        top_row.add_widget(year_input)
-        top_row.add_widget(mileage_input)
-        top_row.add_widget(transmission_input)
-        top_row.add_widget(engine_volume_input)
-        top_row.add_widget(fuel_type_input)
-        top_row.add_widget(driven_wheels_input)
-
-
-        add_button = Button(text="Add request", on_press=self.add_car)
-        top_row.add_widget(add_button)
-
-
-        car_list_view = ListView(item_strings=self.get_car_strings())  # Initial car list
-        car_list_view.bind(on_selection_change=self.on_car_selection)  # Bind selection change event
-
-        main_layout.add_widget(top_row)
-
-
-if __name__ == "__main__":
-    NotiCar().run()
+NotiCarApp().run()
