@@ -5,10 +5,10 @@ from selenium.webdriver.support.ui import Select
 # import undetected_chromedriver as uc -- this is probably useless now
 from selenium.common.exceptions import WebDriverException, NoSuchElementException, ElementClickInterceptedException
 from selenium.webdriver.remote.webdriver import By
-import selenium.webdriver.support.expected_conditions as EC
+import selenium.webdriver.support.expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 from bisect import bisect_left
-from listing_class import listing, listing_extension
+from listing_class import Listing, ListingExtension
 
 
 driver = Driver(uc=True, ad_block_on=True, headless=True)
@@ -75,7 +75,7 @@ def enter_option(box_xpath, value):
     box.click()
     psuccess("Box clicked")
     key_enter = WebDriverWait(driver, timeout=3).until(
-        EC.presence_of_element_located((By.XPATH, f'{box_xpath}/div/div[@class="input-text"]/input[@type="text"]'))
+        ec.presence_of_element_located((By.XPATH, f'{box_xpath}/div/div[@class="input-text"]/input[@type="text"]'))
     )
     pinfo("Found input box")
     pinfo("Sending keys")
@@ -143,9 +143,9 @@ def get_last_page():
 def scrape(make):
     arr = []
     # page = 1
-    # lastpage = get_last_page()
-    lastpage = 3
-    for i in range(lastpage):
+    # last_page = get_last_page()
+    last_page = 2
+    for i in range(last_page):
         pinfo(f"scraping page {i+1}")
         # find the listing container
         container = driver.find_element(By.XPATH, xpaths["list_container"])
@@ -166,22 +166,24 @@ def scrape(make):
             engine = ad.find_element(By.XPATH, relative_xpaths["engine"]).text
             location = ad.find_element(By.XPATH, relative_xpaths["location"]).text
             price = ad.find_element(By.XPATH, relative_xpaths["price"]).text
-            arr.append(listing(make, model, link, year, fuel, location, mileage, gearbox))
-        if i+1 != lastpage:
-            # driver.execute_script("arguments[0].click();", driver.find_element(By.XPATH, xpaths["but_next"]))
+
+            arr.append(Listing(make, model, link, year, fuel, location, mileage, gearbox))
+
+
+        if i+1 != last_page:
             driver.find_element(By.XPATH, xpaths["but_next"]).click()
     return arr
 
 
 def captcha_accept():
     pinfo("Looking for CAPTCHA")
-    if EC.presence_of_element_located((By.XPATH, xpaths["captcha_accept"])):
+    if ec.presence_of_element_located((By.XPATH, xpaths["captcha_accept"])):
         pinfo("CAPTCHA found")
         driver.find_element(By.XPATH, xpaths["captcha_accept"]).click()
         psuccess("CAPTCHA accepted")
 
 
-def main(make, model=None, price_from=None, price_to=None, year_from=None, year_to=None):
+def get_objects(make, model=None, price_from=None, price_to=None, year_from=None, year_to=None):
     # obj_arr = []
     pinfo("Getting website")
     driver.get(website)

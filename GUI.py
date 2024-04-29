@@ -6,11 +6,15 @@ from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 from kivy.uix.label import Label
 from kivy.uix.checkbox import CheckBox
+import scraping
+import threading
 
 Builder.load_file('noticar.kv')
+
+
 class MyLayout(Widget):
 
-
+    car_values = []
 
     def brand_spinner_clicked(self, value):
         self.ids.brand_spinner.text=value
@@ -58,9 +62,6 @@ class MyLayout(Widget):
         price_from = self.price_from_input.text
         price_to = self.price_to_input.text
 
-
-
-
         # Create a Label with search criteria
         search_summary = Label(text=f"{brand} {model} {year_from} - {year_to} {mileage_from} - {mileage_to}km {transmission} {engine_vol}L {fuel} {driven_wheels} {price_from} - {price_to} Eur")
 
@@ -68,7 +69,6 @@ class MyLayout(Widget):
         self.ids.selected_car.add_widget(search_summary)
 
         self.canvas.ask_update()
-
 
         print(f'Brand: {brand}, model: {model}, year from: {year_from}, year to: {year_to}, mileage from: {mileage_from}, mileage to: {mileage_to}, transmission: {transmission}, engine volume: {engine_vol}, fuel type: {fuel}, driven wheels: {driven_wheels}, price from: {price_from}, price to: {price_to}')
 
@@ -85,11 +85,14 @@ class MyLayout(Widget):
         self.price_from_input.text=''
         self.price_to_input.text=''
 
+        scraping.conv_obj(brand, model, year_from, year_to, mileage_from, mileage_to, transmission, engine_vol,
+                          fuel, driven_wheels, price_from, price_to)
 
 
 class NotiCarApp(App):
     def build(self):
         Window.clearcolor=(28/255.0, 99/255.0, 158/255.0, 0.75)
         return MyLayout()
+
 
 NotiCarApp().run()
