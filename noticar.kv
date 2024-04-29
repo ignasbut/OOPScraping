@@ -3,6 +3,14 @@
 <TextInput>
     font_size:20
 
+<ErrorPopup>
+    auto_dismiss: True
+    size_hint: 0.6, 0.2
+    pos_hint: {"x": 0.2, "top": 0.9}
+    title: "Invalid input(s)"
+    Label:
+        text: "Invalid characters: '.', ',', '/', '*', '+', '-', '[', ']', '', '', ';', ':', '\\', '§', '±', '{', '}', '=', '_'. For engine volume use: '.' ."
+
 <MyLayout>
     id:main_layout_id
     brand_spinner:brand_spinner

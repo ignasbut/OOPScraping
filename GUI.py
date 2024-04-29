@@ -6,10 +6,17 @@ from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 from kivy.uix.label import Label
 from kivy.uix.checkbox import CheckBox
-import scraping
-import threading
+from kivy.uix.popup import Popup
+
+# import scraping
+# import threading
 
 Builder.load_file('noticar.kv')
+
+class ErrorPopup(Popup):
+    def __init__(self, **kwargs):
+        super(ErrorPopup, self).__init__(**kwargs)
+        self.content = Label(text="Invalid characters: '.', ',', '/', '*', '+', '-', '[', ']', '', '', ';', ':', '\\', '§', '±', '{', '}', '=', '_'. For engine volume use: '.' .")
 
 
 class MyLayout(Widget):
@@ -34,6 +41,7 @@ class MyLayout(Widget):
     def driven_wheels_clicked(self, value):
         self.ids.driven_wheels_spinner.text=value
 
+    car_details=[]
 
 
     brand_input=ObjectProperty(None)
@@ -48,17 +56,63 @@ class MyLayout(Widget):
     price_from_input=ObjectProperty(None)
     price_to_input=ObjectProperty(None)
 
+    def clear_input_fields(self):
+        self.ids.brand_spinner.text = ''
+        self.ids.model_input.text = ''
+        self.ids.year_from_input.text = ''
+        self.ids.year_to_input.text = ''
+        self.ids.mileage_from_spinner.text = ''
+        self.ids.mileage_to_spinner.text = ''
+        self.ids.transmission_spinner.text = ''
+        self.ids.engine_vol_input.text = ''
+        self.ids.fuel_spinner.text = ''
+        self.ids.driven_wheels_spinner.text = ''
+        self.ids.price_from_input.text = ''
+        self.ids.price_to_input.text = ''
+
+    def check_for_errors(self):
+        invalid_chars = ",./;*+-[]<>:;'\§±{}_=_!@#$%^&*()"
+        error_found = False
+
+        fields_to_check = [
+            self.ids.model_input.text,
+            self.ids.year_from_input.text,
+            self.ids.year_to_input.text,
+            self.ids.price_from_input.text,
+            self.ids.price_to_input.text
+        ]
+
+        for field in fields_to_check:
+            if any(char in field for char in invalid_chars):
+                error_found = True
+                break
+
+        # Check for invalid characters in engine volume (only allow .)
+        if any(char in self.ids.engine_vol_input.text for char in invalid_chars if char != "."):
+            error_found = True
+
+        return error_found
     def press(self):
+        if self.check_for_errors():
+            self.clear_input_fields()
+            ErrorPopup().open()
+            return
+
         brand=self.ids.brand_spinner.text
         model=self.model_input.text
+
         year_from =self.year_from_input.text
         year_to=self.year_to_input.text
+
         mileage_from=self.ids.mileage_from_spinner.text
         mileage_to = self.ids.mileage_to_spinner.text
         transmission=self.ids.transmission_spinner.text
         engine_vol=self.engine_vol_input.text
+
         fuel=self.ids.fuel_spinner.text
         driven_wheels=self.ids.driven_wheels_spinner.text
+
+
         price_from = self.price_from_input.text
         price_to = self.price_to_input.text
 
@@ -72,21 +126,14 @@ class MyLayout(Widget):
 
         print(f'Brand: {brand}, model: {model}, year from: {year_from}, year to: {year_to}, mileage from: {mileage_from}, mileage to: {mileage_to}, transmission: {transmission}, engine volume: {engine_vol}, fuel type: {fuel}, driven wheels: {driven_wheels}, price from: {price_from}, price to: {price_to}')
 
-        self.ids.brand_spinner.text=''
-        self.model_input.text =''
-        self.year_from_input.text =''
-        self.year_to_input.text = ''
-        self.ids.mileage_from_spinner.text=''
-        self.ids.mileage_to_spinner.text=''
-        self.ids.transmission_spinner.text=''
-        self.engine_vol_input.text=''
-        self.ids.fuel_spinner.text=''
-        self.ids.driven_wheels_spinner.text=''
-        self.price_from_input.text=''
-        self.price_to_input.text=''
 
-        scraping.conv_obj(brand, model, year_from, year_to, mileage_from, mileage_to, transmission, engine_vol,
-                          fuel, driven_wheels, price_from, price_to)
+
+        self.clear_input_fields()
+
+
+
+        #scraping.conv_obj(brand, model, year_from, year_to, mileage_from, mileage_to, transmission, engine_vol,
+                          #fuel, driven_wheels, price_from, price_to)
 
 
 class NotiCarApp(App):
