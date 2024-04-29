@@ -7,6 +7,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Seleniumbase adblock files
+downloaded_files/
+
 # Distribution / packaging
 .Python
 build/

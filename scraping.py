@@ -1,30 +1,27 @@
+import time
+
 import undetected_chromedriver as uc
+from undetected_chromedriver import By
+import selenium
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from car import Car
+from autogidas import main as get_objects
+from listing_class import listing, listing_extension
 
 # TODO: Instead of generating custom URL, just use the search function via the website itself.
 # This will make it easier to actually make the search queries
 # As of now, only AUTOPLIUS can take in user-defined input, but AUTOGIDAS will need navigation via JS
 # However, AUTOGIDAS has a more reasonable and text-based search for URL generation
 
-class listing:
-    def __init__(self, make, model, year, fuel_type, location, url, mileage=None, ) -> None:
-        self.make = make
-        self.model = model
-        self.year = year
-        self.fuel_type = fuel_type
-        self.mileage = mileage
-        self.url = url
-        self.location = location
 
-    def update_attr(self, attr, val):
-        setattr(self, attr, val)
+objects = get_objects("BMW")
 
-class listing_extension(listing):
-    def __init__(self, desc=None, color=None, defects=None, reserved=None):
-        self.desc = desc
-        self.color = color
-        self.defects = defects
-        self.reserved = reserved
+# extended = listing_extension.from_listing(objects[1],"This is a description")
 
-    def update_attr(self, attr, val):
-        setattr(self, attr, val)
+print(f"Number of scraped objects: {len(objects)}")
 
+for obj in objects:
+    print("--------------------------")
+    obj.print_info()

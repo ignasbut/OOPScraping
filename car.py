@@ -1,8 +1,9 @@
 class Car:
-    def __init__(self, brand, model, year, mileage, transmission, engine_volume, fuel_type, driven_wheels, price_from, price_to):
+    def __init__(self, brand, model, year_from, year_to, mileage, transmission, engine_volume, fuel_type, driven_wheels, price_from, price_to):
         self.brand = brand
         self.model = model
-        self.year = year
+        self.year_from = year_from
+        self.year_to = year_to
         self.mileage = mileage
         self.transmission = transmission
         self.engine_volume = engine_volume
