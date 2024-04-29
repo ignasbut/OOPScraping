@@ -72,18 +72,18 @@ class MyLayout(Widget):
 
         print(f'Brand: {brand}, model: {model}, year from: {year_from}, year to: {year_to}, mileage from: {mileage_from}, mileage to: {mileage_to}, transmission: {transmission}, engine volume: {engine_vol}, fuel type: {fuel}, driven wheels: {driven_wheels}, price from: {price_from}, price to: {price_to}')
 
-        self.ids.brand_spinner.text='Any'
-        self.model_input.text ='Any'
-        self.year_from_input.text ='Any'
-        self.year_to_input.text = 'Any'
-        self.ids.mileage_from_spinner.text='Any'
-        self.ids.mileage_to_spinner.text='Any'
-        self.ids.transmission_spinner.text='Any'
-        self.engine_vol_input.text='Any'
-        self.ids.fuel_spinner.text='Any'
-        self.ids.driven_wheels_spinner.text='Any'
-        self.price_from_input.text='Any'
-        self.price_to_input.text='Any'
+        self.ids.brand_spinner.text=''
+        self.model_input.text =''
+        self.year_from_input.text =''
+        self.year_to_input.text = ''
+        self.ids.mileage_from_spinner.text=''
+        self.ids.mileage_to_spinner.text=''
+        self.ids.transmission_spinner.text=''
+        self.engine_vol_input.text=''
+        self.ids.fuel_spinner.text=''
+        self.ids.driven_wheels_spinner.text=''
+        self.price_from_input.text=''
+        self.price_to_input.text=''
 
 
 
