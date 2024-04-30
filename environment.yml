@@ -2,17 +2,6 @@ name: scrapingOOP
 channels:
   - defaults
 dependencies:
-  - bzip2=1.0.8=h6c40b1e_5
-  - ca-certificates=2024.3.11=hecd8cb5_0
-  - libffi=3.4.4=hecd8cb5_0
-  - ncurses=6.4=hcec6c5f_0
-  - openssl=3.0.13=hca72f7f_0
-  - python=3.11.8=hf27a42d_0
-  - readline=8.2=hca72f7f_0
-  - sqlite=3.41.2=h6c40b1e_0
-  - tk=8.6.12=h5d9f67b_0
-  - xz=5.4.6=h6c40b1e_0
-  - zlib=1.2.13=h4dc903c_0
   - pip:
     - aioquic==1.0.0
     - asgiref==3.8.1
