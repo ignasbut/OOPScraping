@@ -13,10 +13,10 @@ from kivy.uix.popup import Popup
 
 Builder.load_file('noticar.kv')
 
-class ErrorPopup(Popup):
-    def __init__(self, **kwargs):
-        super(ErrorPopup, self).__init__(**kwargs)
-        self.content = Label(text="Invalid characters: '.', ',', '/', '*', '+', '-', '[', ']', '', '', ';', ':', '\\', '§', '±', '{', '}', '=', '_'. For engine volume use: '.' .")
+# class ErrorPopup(Popup):
+#     def __init__(self, **kwargs):
+#         super(ErrorPopup, self).__init__(**kwargs)
+#         self.content = Label(text="Invalid characters: '.', ',', '/', '*', '+', '-', '[', ']', '', '', ';', ':', '\\', '§', '±', '{', '}', '=', '_'. For engine volume use: '.' .")
 
 
 class MyLayout(Widget):
@@ -93,10 +93,18 @@ class MyLayout(Widget):
 
         return error_found
     def press(self):
+        popup = Popup(title='Invalid input(s)',
+                      content=Label(text="You used invalid characters. For engine volume use: ."),
+                      size_hint=(0.6, 0.2), pos_hint= {"x": 0.2, "top": 0.9},
+        )
+        label = popup.content
+        label.font_size = 24
+
         if self.check_for_errors():
             self.clear_input_fields()
-            ErrorPopup().open()
+            popup.open()
             return
+
 
         brand=self.ids.brand_spinner.text
         model=self.model_input.text
@@ -116,10 +124,10 @@ class MyLayout(Widget):
         price_from = self.price_from_input.text
         price_to = self.price_to_input.text
 
-        # Create a Label with search criteria
+
         search_summary = Label(text=f"{brand} {model} {year_from} - {year_to} {mileage_from} - {mileage_to}km {transmission} {engine_vol}L {fuel} {driven_wheels} {price_from} - {price_to} Eur")
 
-        # Add the Label to the layout (assuming 'your_layout_id' is the parent)
+
         self.ids.selected_car.add_widget(search_summary)
 
         self.canvas.ask_update()
