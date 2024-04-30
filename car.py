@@ -14,3 +14,10 @@ class Car:
 
     def __str__(self):
         return f"{self.brand} {self.model} ({self.year}) {self.mileage} km {self.transmission} {self.engine_volume}L {self.fuel_type} {self.driven_wheels}"
+
+
+# davaj padarom taip:
+# we have abstract class called Car(ABC). Then, 2 subclasses: Listing and Query
+# Query will have all the _from and _to attributes, which will be used for the search
+# Listing will have the definitive values of the ad
+# We can also add some sort of random function that follows the abstraction (idk like return_values or something)
