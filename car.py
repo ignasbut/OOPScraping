@@ -25,7 +25,7 @@ from abc import ABC, abstractmethod
 
 
 class Car(ABC):
-    def __init__(self, brand, model, transmission, engine_volume, fuel_type, driven_wheels):
+    def __init__(self, brand, model=None, transmission=None, engine_volume=None, fuel_type=None, driven_wheels=None):
         self.brand = brand
         self.model = model
         self.transmission = transmission
@@ -54,11 +54,32 @@ class Query(Car):
 
 
 class Listing(Car):
-    def __init__(self, brand, model, year, mileage, transmission, engine_volume, fuel_type, driven_wheels, price):
+    def __init__(self, brand, model, year, mileage, transmission, engine_volume, fuel_type, driven_wheels, price, url,
+                 location):
         super().__init__(brand, model, transmission, engine_volume, fuel_type, driven_wheels)
         self. year = year
         self.mileage = mileage
         self.price = price
+        self.url = url
+        self.location = location
 
     def return_car(self):
         return dir(self)
+
+
+class ListingExtension(Listing):
+    def __init__(self, brand, model, year, mileage, transmission, engine_volume, fuel_type, driven_wheels, price, url,
+                 location):
+        super().__init__(brand, model, year, mileage, transmission, engine_volume, fuel_type, driven_wheels, price, url,
+                         location)
+        self.desc = desc
+        self.color = color
+        self.driven_wheels = driven_wheels
+
+    def print_desc(self):
+        print(self.desc)
+
+    @classmethod
+    def from_listing(cls, listing_obj, desc=None, color=None):
+        return cls(listing_obj.make, listing_obj.model, listing_obj.year, listing_obj.fuel_type, listing_obj.mileage,
+                   listing_obj.url, listing_obj.location, desc, color)
