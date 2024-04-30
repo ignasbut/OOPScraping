@@ -3,7 +3,7 @@ import platform
 import json
 import datetime
 import scraping
-from scraping import get_objects
+# from scraping
 import prettyprint
 import storage
 import asyncio
@@ -38,3 +38,6 @@ if __name__ == '__main__':
 
 
     print(MyLayout.brand_input)
+
+
+    # Maybe create singleton class that can access information between files? ??
