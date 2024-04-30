@@ -52,6 +52,11 @@ class Query(Car):
     def return_car(self):
         return dir(self)
 
+    def query_summary(self):
+        return (f"{self.brand} {self.model} {self.year_from} - {self.year_to} {self.mileage_from} - {self.mileage_to}km"
+                f"{self.transmission} {self.engine_volume}L {self.fuel_type} {self.driven_wheels} "
+                f"{self.price_from} - {self.price_to} Eur")
+
 
 class Listing(Car):
     def __init__(self, brand, model, year, mileage, transmission, engine_volume, fuel_type, driven_wheels, price, url,
@@ -69,12 +74,11 @@ class Listing(Car):
 
 class ListingExtension(Listing):
     def __init__(self, brand, model, year, mileage, transmission, engine_volume, fuel_type, driven_wheels, price, url,
-                 location):
+                 location, desc, color):
         super().__init__(brand, model, year, mileage, transmission, engine_volume, fuel_type, driven_wheels, price, url,
                          location)
         self.desc = desc
         self.color = color
-        self.driven_wheels = driven_wheels
 
     def print_desc(self):
         print(self.desc)
