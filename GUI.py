@@ -7,19 +7,29 @@ from kivy.core.window import Window
 from kivy.uix.label import Label
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.popup import Popup
+import sys
+import os
+
+if sys.platform == 'darwin':  # macOS
+    import pync
+    from functools import partial
+    from mac_notifications import client
+
+
+elif sys.platform == 'win32' or sys.platform == 'win64':  # Windows
+    from win10toast import ToastNotifier
+
 
 # import scraping
 # import threading
 
 Builder.load_file('noticar.kv')
 
-# class ErrorPopup(Popup):
-#     def __init__(self, **kwargs):
-#         super(ErrorPopup, self).__init__(**kwargs)
-#         self.content = Label(text="Invalid characters: '.', ',', '/', '*', '+', '-', '[', ']', '', '', ';', ':', '\\', '§', '±', '{', '}', '=', '_'. For engine volume use: '.' .")
-
 
 class MyLayout(Widget):
+    def __init__(self, app):
+        super().__init__()
+        self.app = app
 
     car_values = []
 
@@ -134,9 +144,12 @@ class MyLayout(Widget):
 
         print(f'Brand: {brand}, model: {model}, year from: {year_from}, year to: {year_to}, mileage from: {mileage_from}, mileage to: {mileage_to}, transmission: {transmission}, engine volume: {engine_vol}, fuel type: {fuel}, driven wheels: {driven_wheels}, price from: {price_from}, price to: {price_to}')
 
-
-
         self.clear_input_fields()
+
+        self.app.show_notification(self)
+
+
+
 
 
 
@@ -147,7 +160,28 @@ class MyLayout(Widget):
 class NotiCarApp(App):
     def build(self):
         Window.clearcolor=(28/255.0, 99/255.0, 158/255.0, 0.75)
-        return MyLayout()
+        return MyLayout(self)
+
+    def show_notification(self, instance):
+        title = "New listing(s!"
+        message = "There are some updates for your request(s)."
+
+        script_path = os.path.abspath('show_notification_with_icon.applescript')
+        icon_path= os.path.abspath('added-64.png')
+        script = f'{script_path} {icon_path} "{title}" "{message}"'
+
+        if sys.platform == 'win32' or sys.platform == 'win64':  # Windows
+            toaster = ToastNotifier()
+            toaster.show_toast(title, message)
+
+        client.create_notification(
+            title,
+            subtitle=message,
+            icon=os.path.abspath('added-64.png')
+
+        )
 
 
-NotiCarApp().run()
+
+if __name__ == '__main__':
+    NotiCarApp().run()
