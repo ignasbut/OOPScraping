@@ -97,7 +97,7 @@ class MyLayout(Widget):
                 error_found = True
                 break
 
-        # Check for invalid characters in engine volume (only allow .)
+
         if any(char in self.ids.engine_vol_input.text for char in invalid_chars if char != "."):
             error_found = True
 
