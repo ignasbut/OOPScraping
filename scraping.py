@@ -10,6 +10,8 @@ from car import Car
 import autogidas
 import autoplius
 import brc
+from queue import Queue
+import threading
 from listing_class import Listing, ListingExtension
 
 
@@ -25,8 +27,7 @@ def prts(objects):
 def decorator(src, *args):
     arr = []
     for arg in src:
-        # tmp = arg.get_objects(brand, model, price_from, price_to, year_from, year_to)
-        tmp = arg.get_objects(*args)
+        tmp = arg.get_decorator(*args)
         for obj in tmp:
             arr.append(obj)
     return arr
