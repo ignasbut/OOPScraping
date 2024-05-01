@@ -44,11 +44,9 @@ def conv_obj(*args):
     year_from = vals[2]
     year_to = vals[3]
     sources = [autogidas, autoplius, brc]
-    arr = decorator(sources, brand, model, None,None, year_from, year_to)
-    prts(arr)
-
-    # print(vals)
-
+    arr = decorator(sources, brand, model, None, None, year_from, year_to)
+    # prts(arr) ; this is for printing
+    return arr
 
 # start()
 
