@@ -1,0 +1,133 @@
+import sqlite3
+
+class CarDB:
+    def __init__(self, database):
+        self.database = database
+        self.conn = None
+        self.create_connection()  # Create the connection in the constructor
+
+    def create_connection(self):
+        self.conn = sqlite3.connect(self.database)
+
+    def close_connection(self):
+        if self.conn:
+            self.conn.close()
+
+    def create_table(self):
+        sql_create_cars_table = """CREATE TABLE IF NOT EXISTS cars (
+                                    id INTEGER PRIMARY KEY,
+                                    make TEXT,
+                                    model TEXT,
+                                    year INTEGER,
+                                    fuel_type TEXT,
+                                    mileage INTEGER,
+                                    url TEXT UNIQUE,
+                                    location TEXT,
+                                    trans TEXT
+                                );"""
+        self.execute_query(sql_create_cars_table)
+
+    def insert_or_update_car(self, data):
+        sql_check_existing = "SELECT * FROM cars WHERE url = ?"
+        sql_update_data = ''' UPDATE cars
+                              SET make = ?,
+                                  model = ?,
+                                  year = ?,
+                                  fuel_type = ?,
+                                  mileage = ?,
+                                  location = ?,
+                                  trans = ?
+                              WHERE url = ? '''
+        sql_insert_data = ''' INSERT INTO cars(make, model, year, fuel_type, mileage, url, location, trans)
+                              VALUES(?,?,?,?,?,?,?,?) '''
+        cur = self.conn.cursor()
+
+        # Check if the URL already exists in the database
+        cur.execute(sql_check_existing, (data["url"],))
+        existing_car = cur.fetchone()
+
+        if existing_car:
+            # URL already exists, update the existing record
+            cur.execute(sql_update_data, (
+                data["make"],
+                data["model"],
+                data["year"],
+                data["fuel_type"],
+                data["mileage"],
+                data["location"],
+                data["trans"],
+                data["url"]
+            ))
+            print("Car data updated successfully!")
+        else:
+            # URL doesn't exist, insert new record
+            cur.execute(sql_insert_data, (
+                data["make"],
+                data["model"],
+                data["year"],
+                data["fuel_type"],
+                data["mileage"],
+                data["url"],
+                data["location"],
+                data["trans"]
+            ))
+            print("New car data inserted successfully!")
+
+        self.conn.commit()
+
+    def execute_query(self, query, data=None):
+        if not self.conn:
+            self.create_connection()
+        cursor = self.conn.cursor()
+        if data:
+            cursor.execute(query, data)
+        else:
+            cursor.execute(query)
+        return cursor
+
+    @staticmethod
+    def get_user_input():
+        make = input("Enter car make: ")
+        model = input("Enter car model: ")
+        year = int(input("Enter car year: "))
+        mileage = int(input("Enter car mileage: "))
+        fuel_type = input("Enter car fuel type: ")
+        url = input("Enter car URL: ")
+        location = input("Enter car location (optional): ")
+        trans = input("Enter car transmission (optional): ")
+
+        car_data = {
+            "make": make,
+            "model": model,
+            "year": year,
+            "mileage": mileage,
+            "fuel_type": fuel_type,
+            "url": url,
+            "location": location,
+            "trans": trans,
+        }
+
+        return car_data
+
+    def extract_data(self):
+        sql_select_all = "SELECT * FROM cars"
+        cur = self.conn.cursor()
+        cur.execute(sql_select_all)
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
+
+# Usage example:
+if __name__ == "__main__":
+    db = CarDB("Car_DB.db")
+
+    db.create_table()
+
+    user_data = CarDB.get_user_input()
+
+    db.insert_or_update_car(user_data)
+
+    db.extract_data()
+   
+    db.close_connection()
+
