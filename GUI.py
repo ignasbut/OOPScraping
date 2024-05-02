@@ -86,7 +86,7 @@ class MyLayout(Widget):
         self.ids.price_to_input.text = ''
 
     def check_for_errors(self):
-        invalid_chars = ",./;*+-[]<>:;'\§±{}_=_!@#$%^&*()"
+        invalid_chars = ",./;*+-[]<>:;'\§±{}_=_!@#$%^&*()ĄČĘĖĮŠŲŪŽąčęėįšųūž"
         error_found = False
 
         fields_to_check = [
@@ -102,7 +102,7 @@ class MyLayout(Widget):
                 error_found = True
                 break
 
-        # Check for invalid characters in engine volume (only allow .)
+
         if any(char in self.ids.engine_vol_input.text for char in invalid_chars if char != "."):
             error_found = True
 
@@ -123,18 +123,14 @@ class MyLayout(Widget):
 
         brand = self.ids.brand_spinner.text
         model = self.model_input.text
-
         year_from = self.year_from_input.text
         year_to = self.year_to_input.text
-
         mileage_from = self.ids.mileage_from_spinner.text
         mileage_to = self.ids.mileage_to_spinner.text
         transmission = self.ids.transmission_spinner.text
         engine_vol = self.engine_vol_input.text
-
         fuel = self.ids.fuel_spinner.text
         driven_wheels = self.ids.driven_wheels_spinner.text
-
         price_from = self.price_from_input.text
         price_to = self.price_to_input.text
 
@@ -163,7 +159,7 @@ class MyLayout(Widget):
 class NotiCarApp(App):
     def build(self):
         Window.clearcolor = (28 / 255.0, 99 / 255.0, 158 / 255.0, 0.75)
-        return MyLayout()
+        return MyLayout(self)
 
     def show_notification(self, instance):
         title = "New listing(s)"
@@ -180,7 +176,7 @@ class NotiCarApp(App):
         client.create_notification(
             title,
             subtitle=message,
-            icon=os.path.abspath('added-64.png')
+            icon=icon_path
 
         )
 
