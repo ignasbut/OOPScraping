@@ -173,7 +173,8 @@ class NotiCarApp(App):
             toaster = ToastNotifier()
             toaster.show_toast(title, message)
 
-        client.create_notification(
+        elif sys.platform == 'darwin':
+            client.create_notification(
             title,
             subtitle=message,
             icon=icon_path
