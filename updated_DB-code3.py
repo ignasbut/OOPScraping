@@ -1,21 +1,26 @@
 import sqlite3
 
 class CarDB:
-    def __init__(self, database):
-        self.database = database
-        self.conn = None
-        self.create_connection()  # Create the connection in the constructor
+    _instance = None
 
-    def create_connection(self):
+    def __new__(cls, database):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.__database = database
+            cls._instance.__conn = None
+            cls._instance.__create_connection()
+        return cls._instance
+    
+    def __create_connection(self):
         try:
-            self.conn = sqlite3.connect(self.database)
+            self.__conn = sqlite3.connect(self.__database)
             print("Database connection established successfully.")
         except sqlite3.Error as e:
             print(f"Error connecting to database: {e}")
 
     def close_connection(self):
-        if self.conn:
-            self.conn.close()
+        if self.__conn:
+            self.__conn.close()
             print("Database connection closed.")
 
     def create_table(self):
@@ -31,7 +36,7 @@ class CarDB:
                                     location TEXT,
                                     trans TEXT
                                     );"""
-            self.execute_query(sql_create_cars_table)
+            self.__execute_query(sql_create_cars_table)
             print("Table created successfully.")
         except sqlite3.Error as e:
             print(f"Error creating table: {e}")
@@ -49,7 +54,7 @@ class CarDB:
                               WHERE url = ? '''
         sql_insert_data = ''' INSERT INTO cars(make, model, year, fuel_type, mileage, url, location, trans)
                               VALUES(?,?,?,?,?,?,?,?) '''
-        cur = self.conn.cursor()
+        cur = self.__conn.cursor()
 
         # Check if the URL already exists in the database
         cur.execute(sql_check_existing, (data["url"],))
@@ -82,21 +87,10 @@ class CarDB:
             ))
             print("New car data inserted successfully!")
 
-        self.conn.commit()
-
-    def execute_query(self, query, data=None):
-        if not self.conn:
-            self.create_connection()
-        cursor = self.conn.cursor()
-        if data:
-            cursor.execute(query, data)
-        else:
-            cursor.execute(query)
-        return cursor
-    
+        self.__conn.commit()    
 
     def get_car_data_from_array(self):
-        from scraping import conv_obj
+        from scraped_objects import conv_obj
        
         car_data_array = conv_obj()
         i = len(car_data_array) 
@@ -127,11 +121,11 @@ class CarDB:
             self.insert_or_update_car(data)
             x = x + 8
 
-    def execute_query(self, query, data=None):
+    def __execute_query(self, query, data=None):
         try:
-            if not self.conn:
-                self.create_connection()
-            cursor = self.conn.cursor()
+            if not self.__conn:
+                self.__create_connection()
+            cursor = self.__conn.cursor()
             if data:
                 cursor.execute(query, data)
             else:
@@ -140,6 +134,14 @@ class CarDB:
         except sqlite3.Error as e:
             print(f"Error executing query: {e}")
             return None
+        
+    def extract_data(self):
+        sql_select_all = "SELECT * FROM cars"
+        cur = self.__conn.cursor()
+        cur.execute(sql_select_all)
+        rows = cur.fetchall()
+        for row in rows:
+            print(row)
 
 # Usage example:
 if __name__ == "__main__":
@@ -147,6 +149,8 @@ if __name__ == "__main__":
 
     db.create_table()
 
+    db.extract_data()
+
     db.get_car_data_from_array()
-    
+
     db.close_connection()
