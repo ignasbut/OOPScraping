@@ -90,7 +90,7 @@ class CarDB:
         self.__conn.commit()    
 
     def get_car_data_from_array(self):
-        from scraped_objects import conv_obj
+        from scraping import conv_obj
        
         car_data_array = conv_obj()
         i = len(car_data_array) 
