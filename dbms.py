@@ -1,5 +1,6 @@
 import sqlite3
 
+
 class CarDB:
     _instance = None
 
@@ -10,7 +11,7 @@ class CarDB:
             cls._instance.__conn = None
             cls._instance.__create_connection()
         return cls._instance
-    
+
     def __create_connection(self):
         try:
             self.__conn = sqlite3.connect(self.__database)
@@ -30,11 +31,14 @@ class CarDB:
                                     make TEXT,
                                     model TEXT,
                                     year INTEGER,
-                                    fuel_type TEXT,
                                     mileage INTEGER,
+                                    trans TEXT,
+                                    engine TEXT,
+                                    fuel_type TEXT,
+                                    driven_wheels TEXT,
+                                    price TEXT,
                                     url TEXT UNIQUE,
-                                    location TEXT,
-                                    trans TEXT
+                                    location TEXT
                                     );"""
             self.__execute_query(sql_create_cars_table)
             print("Table created successfully.")
@@ -47,13 +51,16 @@ class CarDB:
                               SET make = ?,
                                   model = ?,
                                   year = ?,
-                                  fuel_type = ?,
                                   mileage = ?,
-                                  location = ?,
-                                  trans = ?
+                                  trans = ?,
+                                  engine = ?,
+                                  fuel_type = ?,
+                                  driven_wheels = ?,
+                                  price = ?,
+                                  location = ?
                               WHERE url = ? '''
-        sql_insert_data = ''' INSERT INTO cars(make, model, year, fuel_type, mileage, url, location, trans)
-                              VALUES(?,?,?,?,?,?,?,?) '''
+        sql_insert_data = ''' INSERT INTO cars(make, model, year, mileage, trans, engine, fuel_type, driven_wheels, price, url, location)
+                              VALUES(?,?,?,?,?,?,?,?,?,?,?) '''
         cur = self.__conn.cursor()
 
         # Check if the URL already exists in the database
@@ -66,11 +73,14 @@ class CarDB:
                 data["make"],
                 data["model"],
                 data["year"],
-                data["fuel_type"],
                 data["mileage"],
-                data["location"],
                 data["trans"],
-                data["url"]
+                data["engine"],
+                data["fuel_type"],
+                data["driven_wheels"],
+                data["price"],
+                data["url"],
+                data["location"]
             ))
             print("Car data updated successfully!")
         else:
@@ -79,47 +89,38 @@ class CarDB:
                 data["make"],
                 data["model"],
                 data["year"],
-                data["fuel_type"],
                 data["mileage"],
+                data["trans"],
+                data["engine"],
+                data["fuel_type"],
+                data["driven_wheels"],
+                data["price"],
                 data["url"],
-                data["location"],
-                data["trans"]
+                data["location"]
             ))
             print("New car data inserted successfully!")
 
-        self.__conn.commit()    
+        self.__conn.commit()
 
-    def get_car_data_from_array(self):
-        from scraping import conv_obj
-       
-        car_data_array = conv_obj()
-        i = len(car_data_array) 
-        x = 0
+    def get_car_data_from_array(self, arr):
 
-        while x < i:
-            make = car_data_array[x+0]  
-            model = car_data_array[x+1] 
-            year = car_data_array[x+2]
-            fuel_type = car_data_array[x+3]
-            mileage = car_data_array[x+4]
-            url = car_data_array[x+5]
-            location = car_data_array[x+6]
-            trans = car_data_array[x+7]
-            
-        
+        for obj in arr:
             data = {
-                "make": make,
-                "model": model,
-                "year": year,
-                "fuel_type": fuel_type,
-                "mileage": mileage, 
-                "url": url,
-                "location": location,
-                "trans": trans,
+                "make": obj[0],
+                "model": obj[1],
+                "year": obj[2],
+                "mileage": obj[3],
+                "trans": obj[4],
+                "engine": obj[5],
+                "fuel_type": obj[6],
+                "driven_wheels": obj[7],
+                "price": obj[8],
+                "url": obj[9],
+                "location": obj[10]
             }
-        
+
             self.insert_or_update_car(data)
-            x = x + 8
+            # x = x + 8
 
     def __execute_query(self, query, data=None):
         try:
@@ -134,7 +135,7 @@ class CarDB:
         except sqlite3.Error as e:
             print(f"Error executing query: {e}")
             return None
-        
+
     def extract_data(self):
         sql_select_all = "SELECT * FROM cars"
         cur = self.__conn.cursor()
@@ -143,14 +144,15 @@ class CarDB:
         for row in rows:
             print(row)
 
+
 # Usage example:
 if __name__ == "__main__":
     db = CarDB("Car_DB.db")
 
     db.create_table()
 
-    db.extract_data()
-
-    db.get_car_data_from_array()
-
+    # db.extract_data()
+    #
+    # db.get_car_data_from_array()
+    #
     db.close_connection()

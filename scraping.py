@@ -26,11 +26,16 @@ def prts(objects):
 # def decorator(brand, model, price_from=None, price_to=None, year_from=None, year_to=None,):
 def decorator(src, *args):
     arr = []
+    threads = []
     for arg in src:
-        tmp = arg.get_decorator(*args)
-        for obj in tmp:
-            arr.append(obj)
-    return arr
+        threads.append(threading.Thread(target=arg.get_objects, args=[*args]))
+
+    for thread in threads:
+        print(f"Starting thread {thread.name}")
+        thread.start()
+
+    for thread in threads:
+        thread.join()
 
 
 def conv_obj(*args):
@@ -45,12 +50,13 @@ def conv_obj(*args):
     year_from = vals[2]
     year_to = vals[3]
     sources = [autogidas, autoplius, brc]
-    arr = decorator(sources, brand, model, None, None, year_from, year_to)
+    decorator(sources, brand, model, None, None, year_from, year_to)
     # prts(arr) ; this is for printing
-    return arr
 
 # start()
 
+
+# conv_obj("BMW", "X5", None, None)
 
 # extended = listing_extension.from_listing(objects[1],"This is a description")
 

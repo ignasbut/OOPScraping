@@ -8,7 +8,8 @@ from selenium.webdriver.remote.webdriver import By
 import selenium.webdriver.support.expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 from bisect import bisect_left
-from listing_class import Listing, ListingExtension
+from car import Listing, ListingExtension
+import dbms
 
 
 driver = Driver(uc=True, ad_block_on=True, headless=True)
@@ -81,7 +82,13 @@ def enter_option(box_xpath, value):
     pinfo("Sending keys")
     key_enter.send_keys(value)
     psuccess("Keys sent")
-    opts = box.find_element(By.XPATH, './/div/div/div[@style="display: block;"]')
+    opts = box.find_elements(By.XPATH, './/div/div/div[@style="display: block;"]')
+
+    for opt in opts:
+        if opt.get_attribute("data-value") == value:
+            opts = opt
+            continue
+
     opts.click()
     psuccess("Option has been selected")
 
@@ -143,8 +150,8 @@ def get_last_page():
 def scrape(make):
     arr = []
     # page = 1
-    # last_page = get_last_page()
-    last_page = 2
+    last_page = get_last_page()
+    # last_page = 2
     for i in range(last_page):
         pinfo(f"scraping page {i+1}")
         # find the listing container
@@ -163,12 +170,13 @@ def scrape(make):
             except NoSuchElementException:
                 mileage = None
             gearbox = ad.find_element(By.XPATH, relative_xpaths["gearbox"]).text
-            engine = ad.find_element(By.XPATH, relative_xpaths["engine"]).text
+            engine = ad.find_element(By.XPATH, relative_xpaths["engine"]).text.replace('Л', 'L')
             location = ad.find_element(By.XPATH, relative_xpaths["location"]).text
             price = ad.find_element(By.XPATH, relative_xpaths["price"]).text
 
-            arr.append(Listing(make, model, link, year, fuel, location, mileage, gearbox))
+            list_id = link.removesuffix(".html").split("-")[-1]
 
+            arr.append(Listing(make, model, year, mileage, gearbox, engine, fuel, "FWD", price, link, location))
 
         if i+1 != last_page:
             driver.find_element(By.XPATH, xpaths["but_next"]).click()
@@ -183,8 +191,12 @@ def captcha_accept():
         psuccess("CAPTCHA accepted")
 
 
+def upload_to_db(obj_arr):
+    pass
+
+
 def get_objects(make, model=None, price_from=None, price_to=None, year_from=None, year_to=None):
-    # obj_arr = []
+    obj_arr = []
     pinfo("Getting website")
     driver.get(website)
     psuccess("Website accessed")
@@ -193,9 +205,23 @@ def get_objects(make, model=None, price_from=None, price_to=None, year_from=None
     search_fill(make, model, price_from, price_to, year_from, year_to)
     psuccess("Search successfully filled")
     pinfo("Starting to scrape pages")
-    obj_arr = scrape(make)
+
+    for obj in scrape(make):
+        obj_arr.append(obj.return_car())
     psuccess("Pages successfully scraped")
     pinfo("Driver is quitting")
     driver.quit()
     pinfo("Returning object array")
-    return obj_arr
+    db = dbms.CarDB("Car_DB.db")
+
+    db.get_car_data_from_array(obj_arr)
+
+    # for obs in obj_arr:
+    #     print("---------")
+    #     for el in obs:
+    #         print(el)
+
+
+
+    # print(x.return_car() for x in obj_arr)
+    # return obj_arr
