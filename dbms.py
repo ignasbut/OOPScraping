@@ -14,7 +14,7 @@ class CarDB:
 
     def __create_connection(self):
         try:
-            self.__conn = sqlite3.connect(self.__database)
+            self.__conn = sqlite3.connect(self.__database, check_same_thread=False)
             print("Database connection established successfully.")
         except sqlite3.Error as e:
             print(f"Error connecting to database: {e}")
@@ -143,22 +143,23 @@ class CarDB:
         rows = cur.fetchall()
         obj_arr = []  
     
-        for row in rows:
-            obj = {
-               "make": obj[0],
-                "model": obj[1],
-                "year": obj[2],
-                "mileage": obj[3],
-                "trans": obj[4],
-                "engine": obj[5],
-                "fuel_type": obj[6],
-                "driven_wheels": obj[7],
-                "price": obj[8],
-                "url": obj[9],
-                "location": obj[10]
+        for obj in rows:
+            inst = {
+                "id": obj[0],
+               "make": obj[1],
+                "model": obj[2],
+                "year": obj[3],
+                "mileage": obj[4],
+                "trans": obj[5],
+                "engine": obj[6],
+                "fuel_type": obj[7],
+                "driven_wheels": obj[8],
+                "price": obj[9],
+                "url": obj[10],
+                "location": obj[11]
                 }
-            obj_arr.append(obj)  
-            return obj_arr
+            obj_arr.append(inst)
+        return obj_arr
 
 
 # Usage example:
@@ -166,9 +167,9 @@ if __name__ == "__main__":
     db = CarDB("Car_DB.db")
 
     db.create_table()
+    db.get_car_data_from_array()
+    db.insert_or_update_car()
 
-    # db.extract_data()
-    #
-    # db.get_car_data_from_array()
-    #
+    db.extract_data()
+
     db.close_connection()

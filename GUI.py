@@ -14,6 +14,8 @@ from kivy.app import async_runTouchApp
 
 import scraping
 from car import Query
+import car
+import dbms
 import sys
 import os
 
@@ -153,12 +155,22 @@ class MyLayout(Widget):
 
         self.clear_input_fields()
 
-        scraping.conv_obj(brand, model, year_from, year_to)
+        # scraping.conv_obj(brand, model, year_from, year_to)
 
+        self.app.show_notification(self)
 
 
     def update(self):
         self.app.show_notification(self)
+        db = dbms.CarDB("Car_DB.db")
+
+        records = db.extract_data()
+        for record in records:
+            print(record["url"])
+        link_button = Button(text="Click to open a website")
+        link_button.bind(on_press=self.open_link)
+
+        layout.add_widget(link_button)
 
 
 
@@ -172,6 +184,9 @@ class NotiCarApp(App):
         Window.clearcolor = (28 / 255.0, 99 / 255.0, 158 / 255.0, 0.75)
         return MyLayout(self)
 
+    def open_link(self, instance, link):
+        url = link
+        open(url)
     def show_notification(self, instance):
         title = "New listing(s)"
         message = "There are some updates for your request(s)."
@@ -190,9 +205,7 @@ class NotiCarApp(App):
             client.create_notification(
             title,
             subtitle=message,
-            icon=icon_path
-
-        )
+            icon=icon_path)
 
 if __name__ == '__main__':
     NotiCarApp().run()

@@ -12,7 +12,7 @@ import autoplius
 import brc
 from queue import Queue
 import threading
-from listing_class import Listing, ListingExtension
+
 
 
 def prts(objects):
@@ -35,6 +35,7 @@ def decorator(src, *args):
         thread.start()
 
     for thread in threads:
+        print("thread disabled")
         thread.join()
 
 

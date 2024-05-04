@@ -164,14 +164,29 @@
             background_normal:''
             background_color:(10/255.0, 164/255.0, 200/255.0,1)
 
+
+        RoundedButton:
+            size_hint_y:0.05
+            text:"Update"
+            font_size:30
+            on_press: root.update()
+            #background_normal:''
+            #background_color:(66/255.0, 164/255.0, 245/255.0,1)
+            size_hint:(None, None)
+            pos_hint:{'right':1, 'center_y':0.5}
+
         BoxLayout:
             size_hint_y:0.4
-            id:new_listings
             orientation:"vertical"
             background_color:(255/255.0, 0/255.0, 0/255.0,1)
             Label:
                 font_size:32
                 text:"New listings:"
+            BoxLayout:
+                id:new_listings
+                orientation:"vertical"
+
+
 
 
 
