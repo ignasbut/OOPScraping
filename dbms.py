@@ -141,8 +141,22 @@ class CarDB:
         cur = self.__conn.cursor()
         cur.execute(sql_select_all)
         rows = cur.fetchall()
+        obj_arr = []  
+    
         for row in rows:
-            print(row)
+            obj = {
+                "id": row[0],
+                "make": row[1],
+                "model": row[2],
+                "year": row[3],
+                "fuel_type": row[4],
+                "mileage": row[5],
+                "url": row[6],
+                "location": row[7],
+                "trans": row[8]
+                }
+            obj_arr.append(obj)  
+            return obj_arr
 
 
 # Usage example:
