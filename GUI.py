@@ -8,7 +8,7 @@ from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 from kivy.uix.label import Label
-from kivy.uix.checkbox import CheckBox
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivy.app import async_runTouchApp
 
@@ -24,7 +24,7 @@ if sys.platform == 'darwin':  # macOS
 # elif sys.platform == 'win32' or sys.platform == 'win64':  # Windows
     # from win10toast import ToastNotifier
 
-# import scraping
+
 # import threading
 
 Builder.load_file('noticar.kv')
@@ -157,6 +157,9 @@ class MyLayout(Widget):
 
         self.app.show_notification(self)
 
+    def add_new_listings(self):
+
+
 
 class NotiCarApp(App):
     def build(self):
@@ -167,10 +170,10 @@ class NotiCarApp(App):
         title = "New listing(s)"
         message = "There are some updates for your request(s)."
 
-        # script_path = os.path.relpath('./show_notification_with_icon.applescript')
+
         script_path = os.path.abspath('show_notification_with_icon.applescript')
         icon_path = os.path.abspath('added-64.png')
-        # icon_path = os.path.relpath('./added-64.png')
+
         script = f'{script_path} {icon_path} "{title}" "{message}"'
 
         if sys.platform == 'win32' or sys.platform == 'win64':  # Windows
