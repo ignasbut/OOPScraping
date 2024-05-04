@@ -155,7 +155,8 @@ class MyLayout(Widget):
 
         self.clear_input_fields()
 
-        # scraping.conv_obj(brand, model, year_from, year_to)
+        scraping.conv_obj(brand, model, year_from, year_to, mileage_from, mileage_to, driven_wheels, price_from,
+                          price_to)
 
         self.app.show_notification(self)
 
@@ -205,7 +206,9 @@ class NotiCarApp(App):
             client.create_notification(
             title,
             subtitle=message,
-            icon=icon_path)
+            icon=icon_path
+
+        )
 
 if __name__ == '__main__':
     NotiCarApp().run()
