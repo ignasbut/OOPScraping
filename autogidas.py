@@ -12,7 +12,7 @@ from car import Listing, ListingExtension
 import dbms
 
 
-driver = Driver(uc=True, ad_block_on=True, headless=True)
+driver = Driver(uc=True, ad_block_on=True, headless=True, uc_subprocess=False)
 website = 'https://autogidas.lt/en/paieska/automobiliai'
 root = 'https://autogidas.lt/'
 
