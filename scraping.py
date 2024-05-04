@@ -41,8 +41,15 @@ def conv_obj(*args):
     model = vals[1]
     year_from = vals[2]
     year_to = vals[3]
+    mileage_from = vals[4]
+    mileage_to = vals[5]
+    driven_wheels = vals[6]
+    price_from = vals[7]
+    price_to = vals[8]
+
+
     sources = ["autogidas", "autoplius", "brc"]
-    decorator(sources, brand, model, None, None, year_from, year_to)
+    decorator(sources, brand, model, price_from, price_to, year_from, year_to, mileage_from, mileage_to, driven_wheels)
     # prts(arr) ; this is for printing
 
 # start()
