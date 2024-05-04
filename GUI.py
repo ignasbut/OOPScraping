@@ -157,7 +157,13 @@ class MyLayout(Widget):
 
         self.app.show_notification(self)
 
-    def add_new_listings(self):
+    def update(self):
+
+
+
+
+
+
 
 
 
