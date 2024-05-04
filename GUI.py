@@ -155,10 +155,10 @@ class MyLayout(Widget):
 
         scraping.conv_obj(brand, model, year_from, year_to)
 
-        self.app.show_notification(self)
+
 
     def update(self):
-
+        self.app.show_notification(self)
 
 
 
