@@ -156,6 +156,7 @@
 
 
         GridLayout:
+            size_hint_y:0.1
             rows:5
             cols:3
             pos_hint:{'left':1, 'center_y':0.5}
@@ -176,15 +177,22 @@
             pos_hint:{'right':1, 'center_y':0.5}
 
         BoxLayout:
-            size_hint_y:0.4
+
             orientation:"vertical"
             background_color:(255/255.0, 0/255.0, 0/255.0,1)
             Label:
                 font_size:32
                 text:"New listings:"
-            BoxLayout:
-                id:new_listings
-                orientation:"vertical"
+            ScrollView:
+                id:scroll_view
+                #size_hint_y:1
+                do_scroll_x: False
+                do_scroll_y: True
+                #min_height:100
+                BoxLayout:
+                    id:new_listings
+                    orientation:"vertical"
+                    size_hint_y: None
 
 
 

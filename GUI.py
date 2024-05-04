@@ -8,10 +8,12 @@ from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 from kivy.uix.label import Label
+from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
+from kivy.uix.scrollview import ScrollView
 from kivy.app import async_runTouchApp
-
+import webbrowser
 import scraping
 from car import Query
 import car
@@ -164,15 +166,34 @@ class MyLayout(Widget):
     def update(self):
         self.app.show_notification(self)
         db = dbms.CarDB("Car_DB.db")
-
+        self.ids.new_listings.clear_widgets()
+        total_button_height = 0
         records = db.extract_data()
         for record in records:
-            print(record["url"])
-        link_button = Button(text="Click to open a website")
-        link_button.bind(on_press=self.open_link)
+            code=record["url"]
+            car_info=''
+            arr = list(record.values())
 
-        layout.add_widget(link_button)
+            del arr[-2]
+            for val in arr:
+                car_info += str(val)+" "
+                link_button = Button(text=car_info,
+                                 size_hint=(0.99, None),
+                                 size=(1000, 50)
+                                 )
+            total_button_height += link_button.height
+            self.ids.new_listings.add_widget(link_button)
 
+        self.ids.scroll_view.height = total_button_height
+
+
+
+
+            # link_button.bind(on_press=self.open_link(code))
+
+
+    def open_link(self, url):
+        webbrowser.open(url)
 
 
 
@@ -185,9 +206,6 @@ class NotiCarApp(App):
         Window.clearcolor = (28 / 255.0, 99 / 255.0, 158 / 255.0, 0.75)
         return MyLayout(self)
 
-    def open_link(self, instance, link):
-        url = link
-        open(url)
     def show_notification(self, instance):
         title = "New listing(s)"
         message = "There are some updates for your request(s)."
