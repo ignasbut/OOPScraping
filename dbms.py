@@ -145,15 +145,17 @@ class CarDB:
     
         for row in rows:
             obj = {
-                "id": row[0],
-                "make": row[1],
-                "model": row[2],
-                "year": row[3],
-                "fuel_type": row[4],
-                "mileage": row[5],
-                "url": row[6],
-                "location": row[7],
-                "trans": row[8]
+               "make": obj[0],
+                "model": obj[1],
+                "year": obj[2],
+                "mileage": obj[3],
+                "trans": obj[4],
+                "engine": obj[5],
+                "fuel_type": obj[6],
+                "driven_wheels": obj[7],
+                "price": obj[8],
+                "url": obj[9],
+                "location": obj[10]
                 }
             obj_arr.append(obj)  
             return obj_arr
