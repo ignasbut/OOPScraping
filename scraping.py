@@ -1,18 +1,8 @@
-import time
-
-import undetected_chromedriver as uc
-from undetected_chromedriver import By
-import selenium
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
-from car import Car
-import autogidas
-import autoplius
-import brc
-from queue import Queue
+# import autogidas
+# import autoplius
+# import brc
 import threading
-
+import importlib
 
 
 def prts(objects):
@@ -28,6 +18,7 @@ def decorator(src, *args):
     arr = []
     threads = []
     for arg in src:
+        arg = importlib.import_module(arg)
         threads.append(threading.Thread(target=arg.get_objects, args=[*args]))
 
     for thread in threads:
@@ -50,7 +41,7 @@ def conv_obj(*args):
     model = vals[1]
     year_from = vals[2]
     year_to = vals[3]
-    sources = [autogidas, autoplius, brc]
+    sources = ["autogidas", "autoplius", "brc"]
     decorator(sources, brand, model, None, None, year_from, year_to)
     # prts(arr) ; this is for printing
 
