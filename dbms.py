@@ -24,9 +24,30 @@ class CarDB:
             self.__conn.close()
             print("Database connection closed.")
 
-    def create_table(self):
+    def create_table1(self):
         try:
-            sql_create_cars_table = """CREATE TABLE IF NOT EXISTS cars (
+            sql_create_cars_table = """CREATE TABLE IF NOT EXISTS cars1 (
+                                    id INTEGER PRIMARY KEY,
+                                    make TEXT,
+                                    model TEXT,
+                                    year INTEGER,
+                                    mileage INTEGER,
+                                    trans TEXT,
+                                    engine TEXT,
+                                    fuel_type TEXT,
+                                    driven_wheels TEXT,
+                                    price TEXT,
+                                    url TEXT UNIQUE,
+                                    location TEXT
+                                    );"""
+            self.__execute_query(sql_create_cars_table)
+            print("Table created successfully.")
+        except sqlite3.Error as e:
+            print(f"Error creating table: {e}")
+
+    def create_table2(self):
+        try:
+            sql_create_cars_table = """CREATE TABLE IF NOT EXISTS cars2 (
                                     id INTEGER PRIMARY KEY,
                                     make TEXT,
                                     model TEXT,
@@ -46,46 +67,34 @@ class CarDB:
             print(f"Error creating table: {e}")
 
     def insert_or_update_car(self, data):
-        sql_check_existing = "SELECT * FROM cars WHERE url = ?"
-        sql_update_data = ''' UPDATE cars
-                              SET make = ?,
-                                  model = ?,
-                                  year = ?,
-                                  mileage = ?,
-                                  trans = ?,
-                                  engine = ?,
-                                  fuel_type = ?,
-                                  driven_wheels = ?,
-                                  price = ?,
-                                  location = ?
-                              WHERE url = ? '''
-        sql_insert_data = ''' INSERT INTO cars(make, model, year, mileage, trans, engine, fuel_type, driven_wheels, price, url, location)
-                              VALUES(?,?,?,?,?,?,?,?,?,?,?) '''
+        sql_check_existing_cars1 = "SELECT * FROM cars1 WHERE url = ?"
+        sql_check_existing_cars2 = "SELECT * FROM cars2 WHERE url = ?"
+        sql_cancel_data_cars2 = "DELETE FROM cars2 WHERE url = ?"
+
         cur = self.__conn.cursor()
 
-        # Check if the URL already exists in the database
-        cur.execute(sql_check_existing, (data["url"],))
-        existing_car = cur.fetchone()
+    # Check if the URL already exists in cars1
+        cur.execute(sql_check_existing_cars1, (data["url"],))
+        existing_car_cars1 = cur.fetchone()
+        
+        if existing_car_cars1:
+            
+            cur.execute(sql_check_existing_cars2, (data["url"],))
+            existing_car_cars2 = cur.fetchone()
 
-        if existing_car:
-            # URL already exists, update the existing record
-            cur.execute(sql_update_data, (
-                data["make"],
-                data["model"],
-                data["year"],
-                data["mileage"],
-                data["trans"],
-                data["engine"],
-                data["fuel_type"],
-                data["driven_wheels"],
-                data["price"],
-                data["url"],
-                data["location"]
-            ))
-            print("Car data updated successfully!")
+            if existing_car_cars2:
+
+                cur.execute(sql_cancel_data_cars2, (data["url"],))
+                print("Existing car data deleted successfully from cars2!")
+
+            print("Existing car data found in cars1, skipping insertion into cars2.")
         else:
-            # URL doesn't exist, insert new record
-            cur.execute(sql_insert_data, (
+           
+            sql_insert_data_cars1 = ''' INSERT INTO cars1(make, model, year, mileage, trans, engine, fuel_type, driven_wheels, price, url, location)
+                              VALUES(?,?,?,?,?,?,?,?,?,?,?) '''
+            sql_insert_data_cars2 = ''' INSERT INTO cars2(make, model, year, mileage, trans, engine, fuel_type, driven_wheels, price, url, location)
+                              VALUES(?,?,?,?,?,?,?,?,?,?,?) '''
+            cur.execute(sql_insert_data_cars1, (
                 data["make"],
                 data["model"],
                 data["year"],
@@ -98,9 +107,24 @@ class CarDB:
                 data["url"],
                 data["location"]
             ))
-            print("New car data inserted successfully!")
+            print("New car data inserted successfully into cars1!")
+            cur.execute(sql_insert_data_cars2, (
+                data["make"],
+                data["model"],
+                data["year"],
+                data["mileage"],
+                data["trans"],
+                data["engine"],
+                data["fuel_type"],
+                data["driven_wheels"],
+                data["price"],
+                data["url"],
+                data["location"]
+            ))
+            print("New car data inserted successfully into cars2!")
 
         self.__conn.commit()
+
 
     def get_car_data_from_array(self, arr):
 
