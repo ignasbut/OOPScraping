@@ -3,6 +3,26 @@
 <TextInput>
     font_size:20
 
+<RedBoxLayout@BoxLayout>:
+    canvas.before:
+        Color:
+            rgba: 1, 0.5, 0.5, 0.8
+        Rectangle:
+            size: self.size
+            pos: self.pos
+<MyScrollView@ScrollView>:
+    canvas.before:
+        Color:
+            rgba: 1, 0.5, 0.5, 0.8
+        Rectangle:
+            size: self.size
+            pos: self.pos
+<MyBoxLayout@BoxLayout>:
+    orientation: 'vertical'
+    pos_hint: {'top': 1.0}
+    height: self.minimum_height
+
+
 
 <MyLayout>
     id:main_layout_id
@@ -172,25 +192,26 @@
             font_size:30
             on_press: root.update()
             #background_normal:''
-            #background_color:(66/255.0, 164/255.0, 245/255.0,1)
+            #background_color:(1, 164/255.0, 245/255.0,1)
             size_hint:(None, None)
             pos_hint:{'right':1, 'center_y':0.5}
 
-        BoxLayout:
+        RedBoxLayout:
 
             orientation:"vertical"
-            background_color:(255/255.0, 0/255.0, 0/255.0,1)
+
             Label:
+                size_hint_y:0.1
                 font_size:32
                 text:"New listings:"
-            ScrollView:
+            MyScrollView:
                 id:scroll_view
-                #size_hint_y:1
+                size_hint_y:1
                 do_scroll_x: False
                 do_scroll_y: True
-                #min_height:100
-                BoxLayout:
+                MyBoxLayout:
                     id:new_listings
+                    pos_hint:{'center_x':0.5, 'bottom':1}
                     orientation:"vertical"
                     size_hint_y: None
 
@@ -204,7 +225,7 @@
     background_normal:''
     canvas.before:
         Color:
-            rgba:(66/255.0, 164/255.0, 245/255.0,1)
+            rgba:(255/255.0, 164/255.0, 245/255.0,1)
         RoundedRectangle:
             size:self.size
             pos:self.pos

@@ -162,34 +162,32 @@ class MyLayout(Widget):
 
         self.app.show_notification(self)
 
-
     def update(self):
         self.app.show_notification(self)
         db = dbms.CarDB("Car_DB.db")
         self.ids.new_listings.clear_widgets()
-        total_button_height = 0
-        records = db.extract_data()
-        for record in records:
-            code=record["url"]
-            car_info=''
-            arr = list(record.values())
 
+        records = db.extract_data()
+
+        for record in records:
+            car_info = ''
+            arr = list(record.values())
             del arr[-2]
+
             for val in arr:
-                car_info += str(val)+" "
-                link_button = Button(text=car_info,
-                                 size_hint=(0.99, None),
-                                 size=(1000, 50)
+                car_info += str(val) + " "
+
+            link_button = Button(text=car_info,
+                                 size_hint_y= None,
+                                 height=50
                                  )
-            total_button_height += link_button.height
+
+
             self.ids.new_listings.add_widget(link_button)
 
-        self.ids.scroll_view.height = total_button_height
 
-
-
-
-            # link_button.bind(on_press=self.open_link(code))
+        self.ids.scroll_view.do_scroll_y = True
+        # link_button.bind(on_press=self.open_link(code))
 
 
     def open_link(self, url):
@@ -203,7 +201,7 @@ class MyLayout(Widget):
 
 class NotiCarApp(App):
     def build(self):
-        Window.clearcolor = (28 / 255.0, 99 / 255.0, 158 / 255.0, 0.75)
+        #Window.clearcolor = (28 / 255.0, 99 / 255.0, 158 / 255.0, 0.75)
         return MyLayout(self)
 
     def show_notification(self, instance):
