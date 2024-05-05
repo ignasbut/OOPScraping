@@ -20,7 +20,7 @@ xpaths = {
 
 from seleniumbase import Driver
 import time
-from seleniumbase import Driver
+# from seleniumbase import Driver
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import WebDriverException, NoSuchElementException, ElementClickInterceptedException
 from selenium.webdriver.remote.webdriver import By
@@ -30,7 +30,7 @@ from bisect import bisect_left
 from car import Listing, ListingExtension
 import dbms
 
-driver = Driver(uc=True, ad_block_on=True, headless=True)
+# driver = Driver(uc=True, ad_block_on=True, headless=True)
 
 
 def get_objects(*args):

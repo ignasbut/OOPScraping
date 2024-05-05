@@ -1,8 +1,5 @@
 aioquic==1.0.0
 asgiref==3.8.1
-async==0.6.2
-async-gui==0.1.1
-asyncio==3.4.3
 attrs==23.2.0
 Automat==22.10.0
 beautifulsoup4==4.12.3
