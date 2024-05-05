@@ -196,5 +196,5 @@ def get_objects(make, model=None, price_from=None, price_to=None, year_from=None
     # driver.quit()
 
 
-get_objects("BMW", None, None, None, None, None, None,
-            None, None)
+# get_objects("BMW", None, None, None, None, None, None,
+#            None, None)
