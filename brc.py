@@ -1,5 +1,6 @@
 import time
 from seleniumbase import Driver
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import WebDriverException, NoSuchElementException, ElementClickInterceptedException
 from selenium.webdriver.remote.webdriver import By
@@ -26,8 +27,8 @@ def psuccess(*args):
 xpaths = {
     "make": '//label[@class="block py-2"][1]/div[@class="multiselect"]',
     "make_opt": '//*[@id="app"]/main/div/div[1]/div/div/div[2]/div/div[2]/div[1]/label[1]/div/div[3]/ul/li[1]/span/div',
-    "model": '',
-    "model_opt": '',
+    "model": '//*[@id="app"]/main/div/div[1]/div/div/div[2]/div/div[2]/div[1]/label[2]/div',
+    "model_opt": '//*[@id="app"]/main/div/div[1]/div/div/div[2]/div/div[2]/div[1]/label[2]/div/div[3]/ul/li[1]/span',
     "price_from": '//input[@name="price_from"]',
     "price_to": '//input[@name="price_to"]',
     "year_from": '//*[@id="app"]/main/div/div[1]/div/div/div[2]/div/div[2]/div[2]/div/div[1]/div',
@@ -53,7 +54,7 @@ relative_xpaths = {
     "location": './/div[@class="cars__bottom"]/div/span/img',
 }
 
-driver = Driver(uc=True, ad_block_on=True, headless=False)
+driver = Driver(uc=True, ad_block_on=True, headless=True)
 driver.maximize_window()
 driver.get(website)
 
@@ -77,6 +78,8 @@ def enter_option(box_xpath, opt_xpath, value):
     )
     opt.click()
     psuccess("Option clicked")
+    driver.send_keys("html", Keys.ESCAPE)
+
 
 def enter_year(box_xpath, value):
     box = driver.find_element(By.XPATH, box_xpath)
@@ -198,3 +201,4 @@ def get_objects(make, model=None, price_from=None, price_to=None, year_from=None
 
 # get_objects("BMW", None, None, None, None, None, None,
 #            None, None)
+get_objects("Audi", "A4")
