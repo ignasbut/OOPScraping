@@ -194,7 +194,7 @@ class CarDB:
         rows = cur.fetchall()
         obj_arr1 = []  
 
-        for obj in obj_arr1:
+        for obj in rows:
             olddata = {
                 "make": obj[0],
                 "model": obj[1],
