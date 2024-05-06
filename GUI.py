@@ -40,6 +40,19 @@ class MyLayout(Widget):
     def __init__(self, app):
         super().__init__()
         self.app = app
+        self.brand = ""
+        self.model = ""
+        self.year_from = ""
+        self.year_to = ""
+        self.mileage_from = ""
+        self.mileage_to = ""
+        self.transmission = ""
+        self.engine_vol = ""
+        self.fuel = ""
+        self.driven_wheels = ""
+        self.price_from = ""
+        self.price_to = ""
+
     car_values = []
 
     def brand_spinner_clicked(self, value):
@@ -112,6 +125,7 @@ class MyLayout(Widget):
 
         return error_found
 
+
     def press(self):
         popup = Popup(title='Invalid input(s)',
                       content=Label(text="You used invalid characters. For engine volume use: ."),
@@ -125,21 +139,21 @@ class MyLayout(Widget):
             popup.open()
             return
 
-        brand = self.ids.brand_spinner.text
-        model = self.model_input.text
-        year_from = self.year_from_input.text
-        year_to = self.year_to_input.text
-        mileage_from = self.ids.mileage_from_spinner.text
-        mileage_to = self.ids.mileage_to_spinner.text
-        transmission = self.ids.transmission_spinner.text
-        engine_vol = self.engine_vol_input.text
-        fuel = self.ids.fuel_spinner.text
-        driven_wheels = self.ids.driven_wheels_spinner.text
-        price_from = self.price_from_input.text
-        price_to = self.price_to_input.text
+        self.brand = self.ids.brand_spinner.text
+        self.model = self.ids.model_input.text
+        self.year_from = self.ids.year_from_input.text
+        self.year_to = self.ids.year_to_input.text
+        self.mileage_from = self.ids.mileage_from_spinner.text
+        self.mileage_to = self.ids.mileage_to_spinner.text
+        self.transmission = self.ids.transmission_spinner.text
+        self.engine_vol = self.ids.engine_vol_input.text
+        self.fuel = self.ids.fuel_spinner.text
+        self.driven_wheels = self.ids.driven_wheels_spinner.text
+        self.price_from = self.ids.price_from_input.text
+        self.price_to = self.ids.price_to_input.text
 
-        query = Query(brand, model, year_from, year_to, mileage_from, mileage_to, transmission,
-                      engine_vol, fuel, driven_wheels, price_from, price_to)
+        query = Query(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
+                      self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
 
         search_summary = Label(text=query.query_summary())
 
@@ -153,16 +167,20 @@ class MyLayout(Widget):
         self.canvas.ask_update()
 
         print(
-            f'Brand: {brand}, model: {model}, year from: {year_from}, year to: {year_to}, mileage from: {mileage_from}, mileage to: {mileage_to}, transmission: {transmission}, engine volume: {engine_vol}, fuel type: {fuel}, driven wheels: {driven_wheels}, price from: {price_from}, price to: {price_to}')
+            f' {self.brand} {self.model} {self.year_from} {self.year_to} {self.mileage_from}, mileage to: {self.mileage_to} {self.transmission} {self.engine_vol} {self.fuel} {self.driven_wheels} {self.price_from} {self.price_to}')
 
         self.clear_input_fields()
 
-        scraping.conv_obj(brand, model, year_from, year_to, mileage_from, mileage_to, driven_wheels, price_from,
-                          price_to)
+        scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
+                      self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
 
         self.app.show_notification(self)
 
     def update(self):
+
+        scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
+                      self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
+
         self.app.show_notification(self)
         db = dbms.CarDB("Car_DB.db")
         self.ids.new_listings.clear_widgets()
@@ -187,6 +205,7 @@ class MyLayout(Widget):
 
 
         self.ids.scroll_view.do_scroll_y = True
+        self.canvas.ask_update()
         # link_button.bind(on_press=self.open_link(code))
 
 
