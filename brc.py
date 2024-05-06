@@ -196,9 +196,8 @@ def get_objects(make, model=None, price_from=None, price_to=None, year_from=None
     # print(obj_arr)
     db = dbms.CarDB("Car_DB.db")
     db.get_car_data_from_array(obj_arr)
-    # driver.quit()
+    driver.quit()
 
 
 # get_objects("BMW", None, None, None, None, None, None,
 #            None, None)
-get_objects("Audi", "A4")
