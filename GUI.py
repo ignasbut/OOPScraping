@@ -28,6 +28,7 @@ if sys.platform == 'darwin':  # macOS
 # elif sys.platform == 'win32' or sys.platform == 'win64':  # Windows
     # from win10toast import ToastNotifier
 
+from functools import partial
 
 # import threading
 
@@ -178,8 +179,8 @@ class MyLayout(Widget):
 
     def update(self):
 
-        scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
-                      self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
+        # scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
+        #               self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
 
         self.app.show_notification(self)
         db = dbms.CarDB("Car_DB.db")
@@ -190,6 +191,7 @@ class MyLayout(Widget):
         for record in records:
             car_info = ''
             arr = list(record.values())
+            code=arr[-2]
             del arr[-2]
 
             for val in arr:
@@ -199,17 +201,20 @@ class MyLayout(Widget):
                                  size_hint_y= None,
                                  height=50
                                  )
+            link_button.bind(on_press=partial(self.open_link, code))
 
+            #link_button.bind(on_press=partial(self.open_link, code))
 
             self.ids.new_listings.add_widget(link_button)
+            self.canvas.ask_update()
 
 
         self.ids.scroll_view.do_scroll_y = True
         self.canvas.ask_update()
-        # link_button.bind(on_press=self.open_link(code))
 
 
-    def open_link(self, url):
+
+    def open_link(self, url, instance):
         webbrowser.open(url)
 
 
