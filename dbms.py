@@ -161,7 +161,7 @@ class CarDB:
             return None
 
     def extract_data(self):
-        sql_select_all = "SELECT * FROM cars"
+        sql_select_all = "SELECT * FROM cars2"
         cur = self.__conn.cursor()
         cur.execute(sql_select_all)
         rows = cur.fetchall()
