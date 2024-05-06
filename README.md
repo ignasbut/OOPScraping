@@ -22,7 +22,7 @@ Then, all 3 platforms will be checked at a desired interval for new listings.
 
 
 ### Graphical User Interface
-In the initial stages of development, our team deliberated between Tkinter and Kivy for the project's graphical user interface (GUI). Kivy was ultimately chosen due to its cross-platform compatibility, ensuring accessibility on common operating systems like macOS and Windows. Building the GUI involved learning Kivy Language, a new language specifically designed for constructing app layouts within the Kivy framework.  While limited resources and the complexity of Kivy's documentation presented initial challenges, our team persevered, leveraging online resources to gain a comprehensive understanding of the language. By project completion, we had successfully navigated these hurdles and established a solid grasp of Kivy Language's functionalities.
+In the initial stages of development, our team deliberated between Tkinter and Kivy for the project's graphical user interface (GUI). Kivy was ultimately chosen due to its cross-platform compatibility, ensuring accessibility on common operating systems like macOS and Windows. Building the GUI involved learning Kivy Language, a new language specifically designed for constructing app layouts within the Kivy framework.  While limited resources and the complexity of Kivy's documentation presented initial challenges, our team persevered, leveraging online resources to gain a comprehensive understanding of the language. By project completion, we had successfully navigated these hurdles and established a solid grasp of Kivy Language's functionalities. 
 
 ### Storage
 
