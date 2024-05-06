@@ -179,8 +179,8 @@ class MyLayout(Widget):
 
     def update(self):
 
-        # scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
-        #               self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
+        scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
+                      self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
 
         self.app.show_notification(self)
         db = dbms.CarDB("Car_DB.db")
