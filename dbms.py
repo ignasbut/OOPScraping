@@ -190,7 +190,8 @@ class CarDB:
 if __name__ == "__main__":
     db = CarDB("Car_DB.db")
 
-    db.create_table()
+    db.create_table1()
+    db.create_table2()
     db.get_car_data_from_array()
     db.insert_or_update_car()
 
