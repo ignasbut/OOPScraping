@@ -94,6 +94,13 @@ to gain a comprehensive understanding of the language. By project completion, we
 hurdles and established a solid grasp of Kivy Language's functionalities. 
 
 ### Storage
+It was important for our project that the data is inserted into the database, remained there even after the program terminates. Because of this we have chosen SQLite, which provides a reliable and persistent storage solution for car data. 
+
+The main challenge was to think of a logic, according to which, we would have to, both, store all the data, but at the same time extract only the new ones. The logic that our team has thought was this: create two tables, from the scraping the data goes directly into the second table, then a check is carried out, if in the second table there are machines that are also present in the first, then they are deleted from the second, otherwise they are also added to the first. In this way in the second table there are only new announcements.
+
+Another thing we paid attention to was the checking part. Because it is obvious that some machines can have several similar parameters, if not almost all. Therefore we decided to use the URL as the main parameter for checking the machines in the two tables.
+
+***
 
 
 ### Notifications
