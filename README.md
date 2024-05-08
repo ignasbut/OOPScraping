@@ -27,10 +27,12 @@ In the initial stages of development, our team deliberated between Tkinter and K
 ### Storage
 
 
-### Notifications
 
+### Notifications
+Since system notifications play a crucial role in keeping users informed and engaged, we implemented them in our Python project to gain a deeper understanding of their functionalities. To provide a seamless user experience (UX) across different operating systems, we opted for a cross-platform notification approach. This allowed us to explore the nuances of notification systems while ensuring our application effectively delivers critical messages to users regardless of their platform. This not only improves the application's utility but also fosters a more consistent and informative user experience.
 
 
 ## Issues and solutions
-
+Our initial approach with the notifications encountered a significant hurdle. We were unable to establish a background process within a single thread that could trigger user notifications at designated intervals. To overcome this challenge, we opted to integrate system notifications directly into our project. While system notifications presented their own set of obstacles, we identified "plyer" as a leading library for this functionality. Unfortunately, upon further investigation, we discovered that "plyer" is no longer actively maintained. To navigate this roadblock, we adopted a dual-library approach. We implemented separate libraries tailored to specific operating systems, requiring additional effort but ultimately ensuring consistent notification functionality across platforms.
+Our development process continued with a series of refinements, updates, and rigorous testing. However, we encountered a significant setback when our web scraping functionality was blocked by autogidas.lt. Initially, we suspected a temporary ban, but checks confirmed that our IP address wasn't restricted. (Conclusion: the security of websites are solid, we need to enhance our scraping method).
 ## Results and conclusions
