@@ -91,45 +91,30 @@ class CarDB:
  
    
         self.__conn.commit()
-
-        
-    def update_car(self,data, olddata):
-        sql_check_existing_cars1 = "SELECT * FROM cars1 WHERE url = ?"
-        sql_cancel_data_cars2 = "DELETE FROM cars2 WHERE url = ?"
-        sql_insert_data_cars1 = ''' INSERT INTO cars1(make, model, year, mileage, trans, engine, fuel_type, driven_wheels, price, url, location)
-                          VALUES(?,?,?,?,?,?,?,?,?,?,?) '''
-
+        self.close_connection()
+    
+    def delete_old_cars(self):
+        sql_delete_old_cars = """ DELETE FROM cars2 WHERE url IN (SELECT url FROM cars2 INTERSECT SELECT url FROM cars1) """
         cur = self.__conn.cursor()
-
-        cur.execute(sql_check_existing_cars1, (olddata["url"],))
-        existing_car_cars1 = cur.fetchone()
-
-        if existing_car_cars1:
-            # Car exists in cars1, delete it from cars2
-            cur.execute(sql_cancel_data_cars2, (olddata["url"],))
-            print("Existing car data deleted successfully from cars2!")
-            print("Existing car data found in cars1, skipping insertion into cars2.")
-        else:
-            # Car does not exist in cars1, insert it into cars1
-            cur.execute(sql_insert_data_cars1, (
-                data["make"],
-                data["model"],
-                data["year"],
-                data["mileage"],
-                data["trans"],
-                data["engine"],
-                data["fuel_type"],
-                data["driven_wheels"],
-                data["price"],
-                data["url"],
-                data["location"]
-            ))
-            print("New car data inserted successfully into cars1!")
-
+        cur.execute(sql_delete_old_cars)
+        print("Old cars deleted successfully from cars2!")
         self.__conn.commit()
+        self.close_connection()
+
+    def insert_new_cars_to_cars1(self):
+        sql_insert_new_cars = """ INSERT INTO cars1 (make, model, year, mileage, trans, engine, fuel_type, driven_wheels, price, url, location) 
+            SELECT make, model, year, mileage, trans, engine, fuel_type, driven_wheels, price, url, location
+            FROM cars2
+            WHERE url NOT IN (SELECT url FROM cars1) """
+        cur = self.__conn.cursor()
+        cur.execute(sql_insert_new_cars)
+        print("New cars inserted into cars1!")
+        self.__conn.commit()
+        self.close_connection()
+        
+    
         
     def get_car_data_from_array(self, arr):
-
         for obj in arr:
             data = {
                 "make": obj[0],
@@ -145,8 +130,10 @@ class CarDB:
                 "location": obj[10]
             }
 
-            self.insert_car(data)
-            # x = x + 8
+            # Insert data into cars2
+            self.insert_car(data, "cars2")
+
+        
 
     def __execute_query(self, query, data=None):
         try:
@@ -187,31 +174,7 @@ class CarDB:
             obj_arr.append(inst)
         return obj_arr
     
-    def get_car_data_for_check(self):
-        sql_select_all = "SELECT * FROM cars2"
-        cur = self.__conn.cursor()
-        cur.execute(sql_select_all)
-        rows = cur.fetchall()
-        obj_arr1 = []  
-
-        for obj in rows:
-            olddata = {
-                "make": obj[0],
-                "model": obj[1],
-                "year": obj[2],
-                "mileage": obj[3],
-                "trans": obj[4],
-                "engine": obj[5],
-                "fuel_type": obj[6],
-                "driven_wheels": obj[7],
-                "price": obj[8],
-                "url": obj[9],
-                "location": obj[10]
-                }
-            obj_arr1.append(olddata)
-
-            self.update_car(olddata)
-
+    
 
 # Usage example:
 if __name__ == "__main__":
@@ -220,13 +183,12 @@ if __name__ == "__main__":
     db.create_table1()
     db.create_table2()
     db.get_car_data_from_array()
-    
 
-    
-
-    db.get_car_data_for_check()
+    db.insert_new_cars_to_cars1()
+    db.delete_old_cars()
     
     
     db.extract_data()
 
     db.close_connection()
+
