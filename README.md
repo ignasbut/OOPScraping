@@ -17,14 +17,20 @@
 ## Introduction
 
 Our team has noticed that when looking for a used vehicle, there are multiple platforms that host second-hand car ads. 
-As such, it can get tedious looking through all of them to find what is needed. Furthermore, you would have to register for 3 different services
-to get updates about new listing and such. 
-We decided to make a tool that scrapes the 3 main platforms: [Autogidas](https://autogidas.lt "Autogidas car market"), and [BRC](https://lt.brcauto.eu "BRC").
+As such, it can get tedious looking through all of them to find what is needed. Furthermore, you would have to register
+for many different services to get updates about new listing and reminders. 
+We decided to make a tool that scrapes the 3 main platforms: [Autogidas](https://autogidas.lt "Autogidas car market"), 
+and [BRC](https://lt.brcauto.eu "BRC").
 Then, all 3 platforms will be checked at a desired interval for new listings. 
 
 ***
 
 ## Component overview
+
+The project consists of mainly 4 components: Scraping, Graphical User Interface (GUI), Storage, and Notifications. 
+
+Each of these components are interlinked and use each others functions, with the GUI loop being the main driver of the 
+functions. 
 
 ### Main class
 The main class that is used as a foundation for all the project's functions is stored in car.py.
