@@ -11,9 +11,9 @@ from bisect import bisect_left
 from car import Listing, ListingExtension
 import dbms
 
-driver = Driver(uc=True, ad_block_on=True, headless=True)
-website = 'https://autogidas.lt/en/paieska/automobiliai'
-root = 'https://autogidas.lt/'
+# driver = Driver(uc=True, ad_block_on=True, headless=True)
+# website = 'https://autogidas.lt/en/paieska/automobiliai'
+# root = 'https://autogidas.lt/'
 
 
 def pinfo(*args):
@@ -232,4 +232,4 @@ def get_objects(make, model=None, price_from=None, price_to=None, year_from=None
     #
     # db.get_car_data_from_array(obj_arr)
 
-driver.quit()
+# driver.quit()

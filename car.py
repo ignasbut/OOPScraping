@@ -39,7 +39,6 @@ class Listing(Car):
     def __init__(self, brand, model, year, mileage, transmission, engine_volume, fuel_type, driven_wheels,
                  price, url, location):
         super().__init__(brand, model, transmission, engine_volume, fuel_type, driven_wheels)
-        # self.id = list_id
         self. year = year
         self.mileage = mileage
         self.price = price
@@ -47,9 +46,9 @@ class Listing(Car):
         self.location = location
 
     def return_car(self):
-        # return list(vars(self).values())
         return [self.brand, self.model, self.year, self.mileage, self.transmission, self.engine_volume, self.fuel_type,
                 self.driven_wheels, self.price, self.url, self.location]
+
 
 class ListingExtension(Listing):
     def __init__(self, brand, model, year, mileage, transmission, engine_volume, fuel_type, driven_wheels, price, url,
