@@ -55,7 +55,6 @@ relative_xpaths = {
     "location": './/div[@class="cars__bottom"]/div/span/img',
 }
 
-# global driver
 
 def select_gearbox(driver, value):
     if value.lower() == "manual":
@@ -70,7 +69,18 @@ def enter_option(driver, box_xpath, opt_xpath, value):
     pinfo("Box found")
     box.click()
     psuccess("Box clicked")
-    WebDriverWait(driver, timeout=3).until(ec.element_to_be_clickable((By.XPATH, './/div/input[@class="multiselect__input"]'))).send_keys(value)
+    try:
+        inp = WebDriverWait(box, timeout=3).until(ec.presence_of_element_located((By.XPATH, './/div/input[@class="multiselect__input"]')))
+        print("found box")
+        inp.click()
+        print("clicked")
+        inp.clear()
+        print("cleared")
+        time.sleep(1)
+        inp.send_keys(value)
+        print("enter val")
+    except:
+        driver.save_screenshot('error.png')
     pt = f'{box_xpath}/div/ul/li[1]/span/div'
     opt = WebDriverWait(driver, timeout=3).until(
         ec.element_to_be_clickable((By.XPATH, opt_xpath))
@@ -204,7 +214,6 @@ def get_objects(make, model=None, price_from=None, price_to=None, year_from=None
         db.close_connection()
     finally:
         driver.quit()
-        os.system("killall chrome")
 
 
 # get_objects("BMW", None, None, None, None, None, None,

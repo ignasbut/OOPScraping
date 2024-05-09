@@ -38,11 +38,11 @@ def decorator(src, *args):
         print("thread disabled")
         thread.join()
         threads.remove(thread)
-    PROCNAME="chromedriver"
-    for proc in psutil.process_iter():
-        if proc.name() == PROCNAME:
-            proc.kill()
-    threads.clear()
+    # PROCNAME="chromedriver"
+    # for proc in psutil.process_iter():
+    #     if proc.name() == PROCNAME:
+    #         proc.kill()
+    # threads.clear()
 
 
 def conv_obj(*args):
@@ -63,7 +63,7 @@ def conv_obj(*args):
     price_to = vals[8]
 
 
-    sources = ["autogidas", "autoplius", "brc"]
+    sources = ["autogidas","brc"]
     decorator(sources, brand, model, price_from, price_to, year_from, year_to, mileage_from, mileage_to, driven_wheels)
     # prts(arr) ; this is for printing
 
