@@ -4,6 +4,7 @@
 1. [Introduction](#introduction)
    1. Installation
    2. Usage
+   3. Project Requirements
 2. [Component overview](#component-overview)
    1. [Main class](#main-class)
    2. [Scraping](#scraping)
@@ -23,6 +24,122 @@ We decided to make a tool that scrapes the 3 main platforms: [Autogidas](https:/
 and [BRC](https://lt.brcauto.eu "BRC").
 Then, all 3 platforms will be checked at a desired interval for new listings. 
 
+
+### Project Requirements
+
+The main requirements are to use: the 4 pillars of OOP, and at least 2 design patterns.
+
+The first that is used is class abstraction. This is accoplisehd in the `car.py` file, where a base abstract class is created
+and further subclasses are created with inheritance to the base class:
+
+```python
+from abc import ABC, abstractmethod
+
+
+class Car(ABC):
+    def __init__(self, brand, model=None, transmission=None, engine_volume=None, fuel_type=None, driven_wheels=None):
+        self.brand = brand
+        self.model = model
+        self.transmission = transmission
+        self.engine_volume = engine_volume
+        self.fuel_type = fuel_type
+        self.driven_wheels = driven_wheels
+
+    @abstractmethod
+    def return_car(self):
+        pass
+```
+
+Next, there is Inheritance. The `ListingExtension` class inherits from the `Listing class`, adding on some attributes:
+
+```python
+class ListingExtension(Listing):
+    def __init__(self, brand, model, year, mileage, transmission, engine_volume, fuel_type, driven_wheels, price, url,
+                 location, desc, color):
+        super().__init__(brand, model, year, mileage, transmission, engine_volume, fuel_type, driven_wheels, price, url,
+                         location)
+        self.desc = desc
+        self.color = color
+```
+
+Then, there is Encapsulation. This resides in the `dbms.py` file where the database is managed: 
+
+```python
+class CarDB:
+    _instance = None
+
+    def __create_connection(self):
+        try:
+            self.__conn = sqlite3.connect(self.__database, check_same_thread=False)
+            print("Database connection established successfully.")
+        except sqlite3.Error as e:
+            print(f"Error connecting to database: {e}")
+```
+
+Lastly, there is Polymorphism. This is expressed as overriding in our `car.py` file via the base class and subclasses:
+
+```python
+
+class Car(ABC):
+
+   ....
+
+   @abstractmethod
+   def return_car(self):
+     pass
+
+class Query(Car):
+
+   ....
+
+   def return_car(self):
+     return vars(self)
+
+class Listing(Car):
+
+   ....
+
+   def return_car(self):
+      return [self.brand, self.model, self.year, self.mileage, self.transmission, self.engine_volume, self.fuel_type,
+             self.driven_wheels, self.price, self.url, self.location]
+
+class ListingExtension(Listing):
+
+   ....
+
+   def return_car(self):
+     return [self.brand, self.model, self.year, self.mileage, self.transmission, self.engine_volume, self.fuel_type,
+             self.driven_wheels, self.price, self.url, self.location, self.color, self.desc]
+
+```
+
+For the two design patterns, we chose having a Decorator, and a Singleton.
+
+The Singleton is in `dbms.py`, and is expressed as so:
+
+```python
+
+class CarDB:
+    _instance = None
+
+    def __new__(cls, database):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.__database = database
+            cls._instance.__conn = None
+            cls._instance.__create_connection()
+        return cls._instance
+```
+
+As for the Decorator, it can be found in `scraping.py`:
+
+```python
+def decorator(src, *args):
+
+    for arg in src:
+        arg = importlib.import_module(arg)
+        arg.get_objects(*args)
+```
 ***
 
 ## Component overview
