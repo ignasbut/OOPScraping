@@ -25,24 +25,23 @@ def decorator(src, *args):
     # brc.get_objects(*args)
     for arg in src:
         arg = importlib.import_module(arg)
-        threads.append(threading.Thread(target=arg.get_objects, args=[*args]))
-
-    for thread in threads:
-        print(f"Starting thread {thread.name}")
-        try:
-            thread.start()
-        except:
-            thread.join()
-
-    for thread in threads:
-        print("thread disabled")
-        thread.join()
-        threads.remove(thread)
-    PROCNAME="chromedriver"
-    for proc in psutil.process_iter():
-        if proc.name() == PROCNAME:
-            proc.kill()
-    threads.clear()
+        arg.get_objects(*args)
+        # threads.append(threading.Thread(target=arg.get_objects, args=[*args]))
+    #
+    # for thread in threads:
+    #     print(f"Starting thread {thread.name}")
+    #     thread.start()
+    #
+    #
+    # for thread in threads:
+    #     print("thread disabled")
+    #     thread.join()
+    #     threads.remove(thread)
+    # PROCNAME="chromedriver"
+    # for proc in psutil.process_iter():
+    #     if proc.name() == PROCNAME:
+    #         proc.kill()
+    # threads.clear()
 
 
 def conv_obj(*args):
@@ -63,7 +62,7 @@ def conv_obj(*args):
     price_to = vals[8]
 
 
-    sources = ["autogidas", "autoplius", "brc"]
+    sources = ["autogidas","brc"]
     decorator(sources, brand, model, price_from, price_to, year_from, year_to, mileage_from, mileage_to, driven_wheels)
     # prts(arr) ; this is for printing
 
