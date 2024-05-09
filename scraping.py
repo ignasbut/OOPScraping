@@ -25,19 +25,18 @@ def decorator(src, *args):
     # brc.get_objects(*args)
     for arg in src:
         arg = importlib.import_module(arg)
-        threads.append(threading.Thread(target=arg.get_objects, args=[*args]))
-
-    for thread in threads:
-        print(f"Starting thread {thread.name}")
-        try:
-            thread.start()
-        except:
-            thread.join()
-
-    for thread in threads:
-        print("thread disabled")
-        thread.join()
-        threads.remove(thread)
+        arg.get_objects(*args)
+        # threads.append(threading.Thread(target=arg.get_objects, args=[*args]))
+    #
+    # for thread in threads:
+    #     print(f"Starting thread {thread.name}")
+    #     thread.start()
+    #
+    #
+    # for thread in threads:
+    #     print("thread disabled")
+    #     thread.join()
+    #     threads.remove(thread)
     # PROCNAME="chromedriver"
     # for proc in psutil.process_iter():
     #     if proc.name() == PROCNAME:
