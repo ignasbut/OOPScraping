@@ -66,11 +66,11 @@ def select_gearbox(value):
         driver.find_element(By.XPATH, '//*[@id="app"]/main/div/div[1]/div/div/div[2]/div/div[3]/div[2]/div[1]/div/div[3]').click()
 
 def enter_option(box_xpath, opt_xpath, value):
-    box = driver.find_element(By.XPATH, box_xpath)
+    box = WebDriverWait(driver, timeout=3).until(ec.element_to_be_clickable((By.XPATH, box_xpath)))
     pinfo("Box found")
     box.click()
     psuccess("Box clicked")
-    box.find_element(By.XPATH, './/div/input[@class="multiselect__input"]').send_keys(value)
+    WebDriverWait(driver, timeout=3).until(ec.element_to_be_clickable((By.XPATH, './/div/input[@class="multiselect__input"]'))).send_keys(value)
     pt = f'{box_xpath}/div/ul/li[1]/span/div'
     opt = WebDriverWait(driver, timeout=3).until(
         ec.element_to_be_clickable((By.XPATH, opt_xpath))
