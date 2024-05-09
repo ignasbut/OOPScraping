@@ -19,6 +19,8 @@ import car
 import dbms
 import sys
 import os
+import scraping
+import psutil
 
 if sys.platform == 'darwin':  # macOS
     import pync
@@ -170,8 +172,8 @@ class MyLayout(Widget):
 
         self.clear_input_fields()
 
-        scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
-                      self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
+        # scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
+        #               self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
         pass
 
     def update(self):
