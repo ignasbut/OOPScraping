@@ -1,7 +1,5 @@
-import time
-import threading
 import kivy
-import asyncio
+import time
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
@@ -12,7 +10,8 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
-from kivy.app import async_runTouchApp
+from kivy.clock import Clock
+from kivy.clock import mainthread
 import webbrowser
 import scraping
 from car import Query
@@ -25,22 +24,18 @@ if sys.platform == 'darwin':  # macOS
     import pync
     from functools import partial
     from mac_notifications import client
-# elif sys.platform == 'win32' or sys.platform == 'win64':  # Windows
-    # from win10toast import ToastNotifier
+elif sys.platform == 'win32' or sys.platform == 'win64':  # Windows
+    from win10toast import ToastNotifier
 
 from functools import partial
 
-# import threading
-
 Builder.load_file('noticar.kv')
 
-
-
-
 class MyLayout(Widget):
-    def __init__(self, app):
-        super().__init__()
+    def __init__(self, app, **kwargs):
+        super().__init__(**kwargs)
         self.app = app
+        Clock.schedule_interval(self.check_for_notifications, 30)
         self.brand = ""
         self.model = ""
         self.year_from = ""
@@ -53,8 +48,28 @@ class MyLayout(Widget):
         self.driven_wheels = ""
         self.price_from = ""
         self.price_to = ""
+        self.query_list = []
 
-    car_values = []
+    def check_for_notifications(self, dt):
+        self.show_notification()
+        print("Checking for notifications...")
+
+    @mainthread
+    def show_notification(self):
+        title = "New listing(s)"
+        message = "There are some updates for your request(s)."
+        script_path = os.path.abspath('show_notification_with_icon.applescript')
+        icon_path = os.path.abspath('added-64.png')
+        if sys.platform == 'win32' or sys.platform == 'win64':
+            toaster = ToastNotifier()
+            toaster.show_toast(title, message)
+
+        elif sys.platform == 'darwin':
+            client.create_notification(
+                title,
+                subtitle=message,
+                icon=icon_path
+            )
 
     def brand_spinner_clicked(self, value):
         self.ids.brand_spinner.text = value
@@ -73,21 +88,6 @@ class MyLayout(Widget):
 
     def driven_wheels_clicked(self, value):
         self.ids.driven_wheels_spinner.text = value
-
-    car_details = []
-    query_list = []
-
-    brand_input = ObjectProperty(None)
-    model_input = ObjectProperty(None)
-    year_from_input = ObjectProperty(None)
-    year_to_input = ObjectProperty(None)
-    mileage_from_input = ObjectProperty(None)
-    mileage_to_input = ObjectProperty(None)
-    transmission_input = ObjectProperty(None)
-    engine_vol_input = ObjectProperty(None)
-    driven_wheels_input = ObjectProperty(None)
-    price_from_input = ObjectProperty(None)
-    price_to_input = ObjectProperty(None)
 
     def clear_input_fields(self):
         self.ids.brand_spinner.text = ''
@@ -120,17 +120,15 @@ class MyLayout(Widget):
                 error_found = True
                 break
 
-
         if any(char in self.ids.engine_vol_input.text for char in invalid_chars if char != "."):
             error_found = True
 
         return error_found
 
-
     def press(self):
         popup = Popup(title='Invalid input(s)',
                       content=Label(text="You used invalid characters. For engine volume use: ."),
-                      size_hint=(0.6, 0.2), pos_hint={"x": 0.2, "top": 0.9},
+                      size_hint=(0.6, 0.2), pos_hint={"x": 0.2, "top": 0.9}
                       )
         label = popup.content
         label.font_size = 24
@@ -174,15 +172,9 @@ class MyLayout(Widget):
 
         scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
                       self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
-
-        self.app.show_notification(self)
+        pass
 
     def update(self):
-
-        scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
-                      self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
-
-        self.app.show_notification(self)
         db = dbms.CarDB("Car_DB.db")
         self.ids.new_listings.clear_widgets()
 
@@ -203,67 +195,22 @@ class MyLayout(Widget):
                                  )
             link_button.bind(on_press=partial(self.open_link, code))
 
-            #link_button.bind(on_press=partial(self.open_link, code))
-
             self.ids.new_listings.add_widget(link_button)
             self.canvas.ask_update()
 
-
         self.ids.scroll_view.do_scroll_y = True
         self.canvas.ask_update()
-
-
+        pass
 
     def open_link(self, url, instance):
         webbrowser.open(url)
 
 
-
-
-
-
-
 class NotiCarApp(App):
     def build(self):
-        #Window.clearcolor = (28 / 255.0, 99 / 255.0, 158 / 255.0, 0.75)
+        Window.size = (800, 600)  # Set window size
         return MyLayout(self)
 
-    def show_notification(self, instance):
-        title = "New listing(s)"
-        message = "There are some updates for your request(s)."
-
-
-        script_path = os.path.abspath('show_notification_with_icon.applescript')
-        icon_path = os.path.abspath('added-64.png')
-
-        script = f'{script_path} {icon_path} "{title}" "{message}"'
-
-        if sys.platform == 'win32' or sys.platform == 'win64':  # Windows
-            toaster = ToastNotifier()
-            toaster.show_toast(title, message)
-
-        elif sys.platform == 'darwin':
-            client.create_notification(
-            title,
-            subtitle=message,
-            icon=icon_path
-
-        )
-
 if __name__ == '__main__':
-    NotiCarApp().run()
-
-# Async
-
-#
-# loop = asyncio.get_event_loop()
-# loop.run_until_complete(
-#     NotiCarApp().async_run())
-# loop.close()
-
-# Threading
-# t1 = threading.Thread(target=NotiCarApp().run())
-#
-# t1.start()
-# time.sleep(4)
-# t1.join()
+    app = NotiCarApp()
+    app.run()
