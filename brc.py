@@ -71,14 +71,9 @@ def enter_option(driver, box_xpath, opt_xpath, value):
     psuccess("Box clicked")
     try:
         inp = WebDriverWait(box, timeout=3).until(ec.presence_of_element_located((By.XPATH, './/div/input[@class="multiselect__input"]')))
-        print("found box")
         inp.click()
-        print("clicked")
         inp.clear()
-        print("cleared")
-        time.sleep(1)
         inp.send_keys(value)
-        print("enter val")
     except:
         driver.save_screenshot('error.png')
     pt = f'{box_xpath}/div/ul/li[1]/span/div'
@@ -131,14 +126,12 @@ def search_fill(driver, make, model=None, price_from=None, price_to=None, year_f
         type_option(driver, xpaths["mileage_from"], mileage_from)
     if mileage_to is not None:
         type_option(driver, xpaths["mileage_to"], mileage_to)
-
-    # driver.find_element(By.XPATH, xpaths["submit"]).click()
     driver.uc_click(xpaths["submit"], by="xpath")
 
 def scraping(driver, make, driven_wheels):
     arr = []
     pages = get_pages(driver)
-    print(pages)
+    pinfo(f"{pages} found")
 
     for i in range(pages):
         container = driver.find_element(By.XPATH, xpaths["listing_container"])
@@ -206,15 +199,9 @@ def get_objects(make, model=None, price_from=None, price_to=None, year_from=None
         pinfo("Starting to scrape pages")
         for obj in scraping(driver, make, driven_wheels):
             obj_arr.append(obj.return_car())
-        # driver.close()
         db = dbms.CarDB("Car_DB.db")
         db.get_car_data_from_array(obj_arr)
         db.delete_old_cars()
         db.insert_new_cars_to_cars1()
-        db.close_connection()
     finally:
         driver.quit()
-
-
-# get_objects("BMW", None, None, None, None, None, None,
-#            None, None)

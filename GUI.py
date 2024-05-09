@@ -172,13 +172,17 @@ class MyLayout(Widget):
 
         self.clear_input_fields()
 
-        # scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
-        #               self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
+        scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
+                      self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
         pass
 
     def update(self):
         db = dbms.CarDB("Car_DB.db")
         self.ids.new_listings.clear_widgets()
+
+        scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to,
+                          self.transmission,
+                          self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
 
         records = db.extract_data()
 

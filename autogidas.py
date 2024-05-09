@@ -232,7 +232,6 @@ def get_objects(make, model=None, price_from=None, price_to=None, year_from=None
         db.get_car_data_from_array(obj_arr)
         db.delete_old_cars()
         db.insert_new_cars_to_cars1()
-        db.close_connection()
     finally:
         driver.quit()
 

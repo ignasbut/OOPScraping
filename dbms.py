@@ -68,7 +68,7 @@ class CarDB:
 
     def insert_car(self, data):
         
-        sql_insert_data_cars2 = ''' INSERT INTO cars2(make, model, year, mileage, trans, engine, fuel_type, driven_wheels, price, url, location)
+        sql_insert_data_cars2 = ''' INSERT OR IGNORE INTO cars2(make, model, year, mileage, trans, engine, fuel_type, driven_wheels, price, url, location)
                           VALUES(?,?,?,?,?,?,?,?,?,?,?) '''
         
         cur = self.__conn.cursor()
