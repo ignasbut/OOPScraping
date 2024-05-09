@@ -37,7 +37,7 @@ class MyLayout(Widget):
     def __init__(self, app, **kwargs):
         super().__init__(**kwargs)
         self.app = app
-        Clock.schedule_interval(self.check_for_notifications, 3600)
+        Clock.schedule_interval(self.check_for_notifications, 60)
         self.brand = ""
         self.model = ""
         self.year_from = ""
