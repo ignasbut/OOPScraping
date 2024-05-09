@@ -1,3 +1,4 @@
+import os
 import time
 from seleniumbase import Driver
 from selenium.webdriver.common.keys import Keys
@@ -54,9 +55,7 @@ relative_xpaths = {
     "location": './/div[@class="cars__bottom"]/div/span/img',
 }
 
-driver = Driver(uc=True, ad_block_on=True, headless=True)
-driver.maximize_window()
-driver.get(website)
+global driver
 
 def select_gearbox(value):
     if value.lower() == "manual":
@@ -181,22 +180,33 @@ def scraping(make, driven_wheels):
 
 def get_objects(make, model=None, price_from=None, price_to=None, year_from=None, year_to=None, mileage_from=None,
                 mileage_to=None, driven_wheels=None):
-    obj_arr = []
-    pinfo("Getting website")
-    driver.get(website)
-    psuccess("Website accessed")
-    pinfo("Filling search")
-    driver.find_element(By.XPATH, '//*[@id="app"]/div/div/div[2]/a[1]').click()
-    search_fill(make, model, price_from, price_to, year_from, year_to, mileage_from, mileage_to, driven_wheels)
-    psuccess("Search successfully filled")
-    pinfo("Starting to scrape pages")
-    for obj in scraping(make, driven_wheels):
-        obj_arr.append(obj.return_car())
-    driver.quit()
-    # print(obj_arr)
-    db = dbms.CarDB("Car_DB.db")
-    db.get_car_data_from_array(obj_arr)
-    driver.quit()
+    try:
+        global driver
+        driver = Driver(uc=True, ad_block_on=True, headless=False)
+        driver.maximize_window()
+        obj_arr = []
+        pinfo("Getting website")
+        driver.get(website)
+        psuccess("Website accessed")
+        pinfo("Filling search")
+        try:
+            driver.find_element(By.XPATH, '//*[@id="app"]/div/div/div[2]/a[1]').click()
+        except:
+            driver.save_screenshot("error.png")
+        search_fill(make, model, price_from, price_to, year_from, year_to, mileage_from, mileage_to, driven_wheels)
+        psuccess("Search successfully filled")
+        pinfo("Starting to scrape pages")
+        for obj in scraping(make, driven_wheels):
+            obj_arr.append(obj.return_car())
+        # driver.close()
+        db = dbms.CarDB("Car_DB.db")
+        db.get_car_data_from_array(obj_arr)
+        db.delete_old_cars()
+        db.insert_new_cars_to_cars1()
+        db.close_connection()
+    finally:
+        driver.quit()
+        os.system("killall chrome")
 
 
 # get_objects("BMW", None, None, None, None, None, None,

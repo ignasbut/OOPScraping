@@ -1,9 +1,12 @@
 # import autogidas
 # import autoplius
-# import brc
+import brc
 import threading
 import sys
+import psutil
 import importlib
+
+# import brc
 
 
 def prts(objects):
@@ -18,17 +21,28 @@ def prts(objects):
 def decorator(src, *args):
     arr = []
     threads = []
+    # import brc
+    # brc.get_objects(*args)
     for arg in src:
         arg = importlib.import_module(arg)
         threads.append(threading.Thread(target=arg.get_objects, args=[*args]))
 
     for thread in threads:
         print(f"Starting thread {thread.name}")
-        thread.start()
+        try:
+            thread.start()
+        except:
+            thread.join()
 
     for thread in threads:
         print("thread disabled")
         thread.join()
+        threads.remove(thread)
+    PROCNAME="chromedriver"
+    for proc in psutil.process_iter():
+        if proc.name() == PROCNAME:
+            proc.kill()
+    threads.clear()
 
 
 def conv_obj(*args):

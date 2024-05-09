@@ -91,7 +91,7 @@ class CarDB:
  
    
         self.__conn.commit()
-        self.close_connection()
+        # self.close_connection()
     
     def delete_old_cars(self):
         sql_delete_old_cars = """ DELETE FROM cars2 WHERE url IN (SELECT url FROM cars2 INTERSECT SELECT url FROM cars1) """
@@ -99,7 +99,7 @@ class CarDB:
         cur.execute(sql_delete_old_cars)
         print("Old cars deleted successfully from cars2!")
         self.__conn.commit()
-        self.close_connection()
+        # self.close_connection()
 
     def insert_new_cars_to_cars1(self):
         sql_insert_new_cars = """ INSERT INTO cars1 (make, model, year, mileage, trans, engine, fuel_type, driven_wheels, price, url, location) 
@@ -110,7 +110,7 @@ class CarDB:
         cur.execute(sql_insert_new_cars)
         print("New cars inserted into cars1!")
         self.__conn.commit()
-        self.close_connection()
+        # self.close_connection()
         
     
         
@@ -131,7 +131,7 @@ class CarDB:
             }
 
             # Insert data into cars2
-            self.insert_car(data, "cars2")
+            self.insert_car(data)
 
         
 

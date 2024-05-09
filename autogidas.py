@@ -1,14 +1,14 @@
 import time
 from seleniumbase import Driver
-# import selenium.webdriver.chrome.options -- most likely not needed
-from selenium.webdriver.support.ui import Select
-# import undetected_chromedriver as uc -- this is probably useless now
-from selenium.common.exceptions import WebDriverException, NoSuchElementException, ElementClickInterceptedException
-from selenium.webdriver.remote.webdriver import By
-import selenium.webdriver.support.expected_conditions as ec
-from selenium.webdriver.support.wait import WebDriverWait
-from bisect import bisect_left
-from car import Listing, ListingExtension
+# # import selenium.webdriver.chrome.options -- most likely not needed
+# from selenium.webdriver.support.ui import Select
+# # import undetected_chromedriver as uc -- this is probably useless now
+# from selenium.common.exceptions import WebDriverException, NoSuchElementException, ElementClickInterceptedException
+# from selenium.webdriver.remote.webdriver import By
+# import selenium.webdriver.support.expected_conditions as ec
+# from selenium.webdriver.support.wait import WebDriverWait
+# from bisect import bisect_left
+# from car import Listing, ListingExtension
 import dbms
 
 # driver = Driver(uc=True, ad_block_on=True, headless=True)
@@ -211,7 +211,7 @@ def upload_to_db(obj_arr):
 def get_objects(make, model=None, price_from=None, price_to=None, year_from=None, year_to=None, mileage_from=None,
                 mileage_to=None, driven_wheels=None):
     print("No bueno amigo, got blocked")
-    return []
+    # return []
     # obj_arr = []
     # pinfo("Getting website")
     # driver.get(website)
