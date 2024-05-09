@@ -55,9 +55,9 @@ relative_xpaths = {
     "location": './/div[@class="cars__bottom"]/div/span/img',
 }
 
-global driver
+# global driver
 
-def select_gearbox(value):
+def select_gearbox(driver, value):
     if value.lower() == "manual":
         driver.find_element(By.XPATH, '//*[@id="app"]/main/div/div[1]/div/div/div[2]/div/div[3]/div[2]/div[1]/div/div[1]').click()
     elif value.lower() == "automatic":
@@ -65,7 +65,7 @@ def select_gearbox(value):
     else:
         driver.find_element(By.XPATH, '//*[@id="app"]/main/div/div[1]/div/div/div[2]/div/div[3]/div[2]/div[1]/div/div[3]').click()
 
-def enter_option(box_xpath, opt_xpath, value):
+def enter_option(driver, box_xpath, opt_xpath, value):
     box = WebDriverWait(driver, timeout=3).until(ec.element_to_be_clickable((By.XPATH, box_xpath)))
     pinfo("Box found")
     box.click()
@@ -80,7 +80,7 @@ def enter_option(box_xpath, opt_xpath, value):
     driver.send_keys("html", Keys.ESCAPE)
 
 
-def enter_year(box_xpath, value):
+def enter_year(driver, box_xpath, value):
     box = driver.find_element(By.XPATH, box_xpath)
     pinfo("Box found")
     box.click()
@@ -88,13 +88,13 @@ def enter_year(box_xpath, value):
     box.send_keys(value)
 
 
-def type_option(box_xpath, value):
+def type_option(driver, box_xpath, value):
     box = driver.find_element(By.XPATH, box_xpath)
     pinfo("Box found")
     box.click()
     box.send_keys(value)
 
-def get_pages():
+def get_pages(driver):
     try:
         page = driver.find_element(By.XPATH, xpaths["paginator"])
         num = page.find_elements(By.XPATH, './li[@class="page-item"]')[-2].text
@@ -103,31 +103,31 @@ def get_pages():
     return int(num)
 
 
-def search_fill(make, model=None, price_from=None, price_to=None, year_from=None, year_to=None, mileage_from=None,
+def search_fill(driver, make, model=None, price_from=None, price_to=None, year_from=None, year_to=None, mileage_from=None,
                 mileage_to=None, driven_wheels=None):
     driver.find_element(By.XPATH, xpaths["detailed_search"]).click()
-    enter_option(xpaths["make"], xpaths["make_opt"], make)
+    enter_option(driver, xpaths["make"], xpaths["make_opt"], make)
     if model is not None:
-        enter_option(xpaths["model"], xpaths["model_opt"], model)
+        enter_option(driver, xpaths["model"], xpaths["model_opt"], model)
     if price_from is not None:
-        type_option(xpaths["price_from"], price_from)
+        type_option(driver, xpaths["price_from"], price_from)
     if price_to is not None:
-        type_option(xpaths["price_to"], price_to)
+        type_option(driver, xpaths["price_to"], price_to)
     if year_from is not None:
-        enter_option(xpaths["year_from"], xpaths["year_from_opt"], year_from)
+        enter_option(driver, xpaths["year_from"], xpaths["year_from_opt"], year_from)
     if year_to is not None:
-        enter_option(xpaths["year_to"], xpaths["year_to_opt"] , year_to)
+        enter_option(driver, xpaths["year_to"], xpaths["year_to_opt"] , year_to)
     if mileage_from is not None:
-        type_option(xpaths["mileage_from"], mileage_from)
+        type_option(driver, xpaths["mileage_from"], mileage_from)
     if mileage_to is not None:
-        type_option(xpaths["mileage_to"], mileage_to)
+        type_option(driver, xpaths["mileage_to"], mileage_to)
 
     # driver.find_element(By.XPATH, xpaths["submit"]).click()
     driver.uc_click(xpaths["submit"], by="xpath")
 
-def scraping(make, driven_wheels):
+def scraping(driver, make, driven_wheels):
     arr = []
-    pages = get_pages()
+    pages = get_pages(driver)
     print(pages)
 
     for i in range(pages):
@@ -152,7 +152,6 @@ def scraping(make, driven_wheels):
                 gearbox = info[2]
                 mileage = info[3]
                 horsepower = info[4]
-            # price = listing.find_element(By.XPATH, relative_xpaths["price"]).text.strip()
             try:
                 price = driver.execute_script("""
             return jQuery(arguments[0]).contents().filter(function() {
@@ -164,7 +163,7 @@ def scraping(make, driven_wheels):
             if gearbox == "Automatic":
                 try:
                     model = model.removesuffix(" Automatas")
-                    model = model. removesuffix(" A/T")
+                    model = model.removesuffix(" A/T")
                 except ValueError:
                     continue
             location = listing.find_element(By.XPATH, relative_xpaths["location"]).get_attribute("alt").removeprefix("BRC ")
@@ -180,9 +179,8 @@ def scraping(make, driven_wheels):
 
 def get_objects(make, model=None, price_from=None, price_to=None, year_from=None, year_to=None, mileage_from=None,
                 mileage_to=None, driven_wheels=None):
+    driver = Driver(uc=True, ad_block_on=True, headless=True)
     try:
-        global driver
-        driver = Driver(uc=True, ad_block_on=True, headless=True)
         driver.maximize_window()
         obj_arr = []
         pinfo("Getting website")
@@ -193,10 +191,10 @@ def get_objects(make, model=None, price_from=None, price_to=None, year_from=None
             driver.find_element(By.XPATH, '//*[@id="app"]/div/div/div[2]/a[1]').click()
         except:
             driver.save_screenshot("error.png")
-        search_fill(make, model, price_from, price_to, year_from, year_to, mileage_from, mileage_to, driven_wheels)
+        search_fill(driver, make, model, price_from, price_to, year_from, year_to, mileage_from, mileage_to, driven_wheels)
         psuccess("Search successfully filled")
         pinfo("Starting to scrape pages")
-        for obj in scraping(make, driven_wheels):
+        for obj in scraping(driver, make, driven_wheels):
             obj_arr.append(obj.return_car())
         # driver.close()
         db = dbms.CarDB("Car_DB.db")

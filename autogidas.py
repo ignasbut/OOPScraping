@@ -11,7 +11,6 @@ from bisect import bisect_left
 from car import Listing, ListingExtension
 import dbms
 
-global driver
 website = 'https://autogidas.lt/en/paieska/automobiliai'
 root = 'https://autogidas.lt/'
 
@@ -74,7 +73,7 @@ mileage_values = [1, 2500, 5000, 10000, 20000, 30000, 60000, 70000, 80000, 90000
 
 # Function that inputs text into text box
 # Need the XPath of the input box and the value itself.
-def enter_option(box_xpath, value):
+def enter_option(driver, box_xpath, value):
     box = driver.find_element(By.XPATH, box_xpath)
     pinfo("Box found")
     box.click()
@@ -99,7 +98,7 @@ def enter_option(box_xpath, value):
 
 # Selects the option from a dropdown list
 # Inputs = XPath of the dropdown menu, the value list, and the input value
-def select_dropdown(drop_xpath, value_list, value):
+def select_dropdown(driver, drop_xpath, value_list, value):
     value = take_closest(value_list, value)
     pinfo(f"value {value} was chosen")
     selection = Select(driver.find_element(By.XPATH, drop_xpath))
@@ -123,32 +122,32 @@ def take_closest(lst, value):
         return before
 
 
-def search_fill(make, model=None, price_from=None, price_to=None, year_from=None, year_to=None, mileage_from=None,
+def search_fill(driver, make, model=None, price_from=None, price_to=None, year_from=None, year_to=None, mileage_from=None,
                 mileage_to=None, driven_wheels=None):
-    enter_option(xpaths["make_box"], make)
+    enter_option(driver, xpaths["make_box"], make)
     if model is not None:
-        enter_option(xpaths["model_box"], model)
+        enter_option(driver, xpaths["model_box"], model)
     if price_from is not None:
-        select_dropdown(xpaths["price_from"], price_values, price_from)
+        select_dropdown(driver, xpaths["price_from"], price_values, price_from)
     if price_to is not None:
-        select_dropdown(xpaths["price_to"], price_values,price_to)
+        select_dropdown(driver, xpaths["price_to"], price_values,price_to)
     if year_from is not None:
-        select_dropdown(xpaths["year_from"], year_values, year_from)
+        select_dropdown(driver, xpaths["year_from"], year_values, year_from)
     if year_to is not None:
-        select_dropdown(xpaths["year_to"], year_values, year_to)
+        select_dropdown(driver, xpaths["year_to"], year_values, year_to)
     if mileage_from is not None:
-        select_dropdown(xpaths["mileage_from"], mileage_values, mileage_from)
+        select_dropdown(driver, xpaths["mileage_from"], mileage_values, mileage_from)
     if mileage_to is not None:
-        select_dropdown(xpaths["mileage_to"], mileage_values, mileage_to)
+        select_dropdown(driver, xpaths["mileage_to"], mileage_values, mileage_to)
     if driven_wheels is not None:
-        enter_option(xpaths["driven_wheels"], driven_wheels)
+        enter_option(driver, xpaths["driven_wheels"], driven_wheels)
     try:
         driver.execute_script("arguments[0].click();", driver.find_element(By.XPATH, xpaths["but_submit"]))
     except ElementClickInterceptedException:
         perror("Error when clicking submit!")
 
 
-def get_last_page():
+def get_last_page(driver):
     try:
         container = driver.find_element(By.XPATH, xpaths["paginator"])
         selections = container.find_elements(By.XPATH, './/a/div')
@@ -159,10 +158,10 @@ def get_last_page():
     return int(page)
 
 
-def scrape(make):
+def scrape(driver, make):
     arr = []
     # page = 1
-    last_page = get_last_page()
+    last_page = get_last_page(driver)
     # last_page = 2
     for i in range(last_page):
         pinfo(f"scraping page {i+1}")
@@ -196,7 +195,7 @@ def scrape(make):
     return arr
 
 
-def captcha_accept():
+def captcha_accept(driver):
     pinfo("Looking for CAPTCHA")
     if ec.presence_of_element_located((By.XPATH, xpaths["captcha_accept"])):
         pinfo("CAPTCHA found")
@@ -212,26 +211,28 @@ def get_objects(make, model=None, price_from=None, price_to=None, year_from=None
                 mileage_to=None, driven_wheels=None):
     # print("No bueno amigo, got blocked")
     # return []
+    driver = Driver(uc=True, ad_block_on=True, headless=True)
     try:
-        global driver
-        driver = Driver(uc=True, ad_block_on=True, headless=True)
         obj_arr = []
         pinfo("Getting website")
         driver.get(website)
         psuccess("Website accessed")
-        captcha_accept()
+        captcha_accept(driver)
         pinfo("Filling search")
-        search_fill(make, model, price_from, price_to, year_from, year_to, mileage_from, mileage_to, driven_wheels)
+        search_fill(driver, make, model, price_from, price_to, year_from, year_to, mileage_from, mileage_to, driven_wheels)
         psuccess("Search successfully filled")
         pinfo("Starting to scrape pages")
 
-        for obj in scrape(make):
+        for obj in scrape(driver, make):
             obj_arr.append(obj.return_car())
         psuccess("Pages successfully scraped")
         pinfo("Driver is quitting")
         pinfo("Returning object array")
         db = dbms.CarDB("Car_DB.db")
         db.get_car_data_from_array(obj_arr)
+        db.delete_old_cars()
+        db.insert_new_cars_to_cars1()
+        db.close_connection()
     finally:
         driver.quit()
 
