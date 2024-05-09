@@ -182,7 +182,7 @@ def get_objects(make, model=None, price_from=None, price_to=None, year_from=None
                 mileage_to=None, driven_wheels=None):
     try:
         global driver
-        driver = Driver(uc=True, ad_block_on=True, headless=False)
+        driver = Driver(uc=True, ad_block_on=True, headless=True)
         driver.maximize_window()
         obj_arr = []
         pinfo("Getting website")

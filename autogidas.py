@@ -1,19 +1,19 @@
 import time
 from seleniumbase import Driver
-# # import selenium.webdriver.chrome.options -- most likely not needed
-# from selenium.webdriver.support.ui import Select
-# # import undetected_chromedriver as uc -- this is probably useless now
-# from selenium.common.exceptions import WebDriverException, NoSuchElementException, ElementClickInterceptedException
-# from selenium.webdriver.remote.webdriver import By
-# import selenium.webdriver.support.expected_conditions as ec
-# from selenium.webdriver.support.wait import WebDriverWait
-# from bisect import bisect_left
-# from car import Listing, ListingExtension
+# import selenium.webdriver.chrome.options -- most likely not needed
+from selenium.webdriver.support.ui import Select
+# import undetected_chromedriver as uc -- this is probably useless now
+from selenium.common.exceptions import WebDriverException, NoSuchElementException, ElementClickInterceptedException
+from selenium.webdriver.remote.webdriver import By
+import selenium.webdriver.support.expected_conditions as ec
+from selenium.webdriver.support.wait import WebDriverWait
+from bisect import bisect_left
+from car import Listing, ListingExtension
 import dbms
 
-# driver = Driver(uc=True, ad_block_on=True, headless=True)
-# website = 'https://autogidas.lt/en/paieska/automobiliai'
-# root = 'https://autogidas.lt/'
+global driver
+website = 'https://autogidas.lt/en/paieska/automobiliai'
+root = 'https://autogidas.lt/'
 
 
 def pinfo(*args):
@@ -210,26 +210,29 @@ def upload_to_db(obj_arr):
 
 def get_objects(make, model=None, price_from=None, price_to=None, year_from=None, year_to=None, mileage_from=None,
                 mileage_to=None, driven_wheels=None):
-    print("No bueno amigo, got blocked")
+    # print("No bueno amigo, got blocked")
     # return []
-    # obj_arr = []
-    # pinfo("Getting website")
-    # driver.get(website)
-    # psuccess("Website accessed")
-    # captcha_accept()
-    # pinfo("Filling search")
-    # search_fill(make, model, price_from, price_to, year_from, year_to, mileage_from, mileage_to, driven_wheels)
-    # psuccess("Search successfully filled")
-    # pinfo("Starting to scrape pages")
-    #
-    # for obj in scrape(make):
-    #     obj_arr.append(obj.return_car())
-    # psuccess("Pages successfully scraped")
-    # pinfo("Driver is quitting")
-    # driver.quit()
-    # pinfo("Returning object array")
-    # db = dbms.CarDB("Car_DB.db")
-    #
-    # db.get_car_data_from_array(obj_arr)
+    try:
+        global driver
+        driver = Driver(uc=True, ad_block_on=True, headless=True)
+        obj_arr = []
+        pinfo("Getting website")
+        driver.get(website)
+        psuccess("Website accessed")
+        captcha_accept()
+        pinfo("Filling search")
+        search_fill(make, model, price_from, price_to, year_from, year_to, mileage_from, mileage_to, driven_wheels)
+        psuccess("Search successfully filled")
+        pinfo("Starting to scrape pages")
+
+        for obj in scrape(make):
+            obj_arr.append(obj.return_car())
+        psuccess("Pages successfully scraped")
+        pinfo("Driver is quitting")
+        pinfo("Returning object array")
+        db = dbms.CarDB("Car_DB.db")
+        db.get_car_data_from_array(obj_arr)
+    finally:
+        driver.quit()
 
 # driver.quit()
