@@ -58,8 +58,8 @@ class MyLayout(Widget):
 
     @mainthread
     def show_notification(self):
-        title = "New listing(s)"
-        message = "There are some updates for your request(s)."
+        title = "New listing(s)?!"
+        message = "Press Update again to check for new listings"
         script_path = os.path.abspath('show_notification_with_icon.applescript')
         icon_path = os.path.abspath('added-64.png')
         if sys.platform == 'win32' or sys.platform == 'win64':
