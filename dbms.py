@@ -182,7 +182,7 @@ if __name__ == "__main__":
 
     db.create_table1()
     db.create_table2()
-    db.get_car_data_from_array()
+    # db.get_car_data_from_array()
 
     db.insert_new_cars_to_cars1()
     db.delete_old_cars()

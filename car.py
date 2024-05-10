@@ -58,6 +58,10 @@ class ListingExtension(Listing):
         self.desc = desc
         self.color = color
 
+    def return_car(self):
+        return [self.brand, self.model, self.year, self.mileage, self.transmission, self.engine_volume, self.fuel_type,
+                self.driven_wheels, self.price, self.url, self.location, self.color, self.desc]
+
     def print_desc(self):
         print(self.desc)
 
