@@ -37,7 +37,7 @@ class MyLayout(Widget):
     def __init__(self, app, **kwargs):
         super().__init__(**kwargs)
         self.app = app
-        Clock.schedule_interval(self.check_for_notifications, 60)
+        Clock.schedule_interval(self.check_for_notifications, 3600)
         self.brand = ""
         self.model = ""
         self.year_from = ""
@@ -90,6 +90,18 @@ class MyLayout(Widget):
 
     def driven_wheels_clicked(self, value):
         self.ids.driven_wheels_spinner.text = value
+
+    brand_input = ObjectProperty(None)
+    model_input = ObjectProperty(None)
+    year_from_input = ObjectProperty(None)
+    year_to_input = ObjectProperty(None)
+    mileage_from_input = ObjectProperty(None)
+    mileage_to_input = ObjectProperty(None)
+    transmission_input = ObjectProperty(None)
+    engine_vol_input = ObjectProperty(None)
+    driven_wheels_input = ObjectProperty(None)
+    price_from_input = ObjectProperty(None)
+    price_to_input = ObjectProperty(None)
 
     def clear_input_fields(self):
         self.ids.brand_spinner.text = ''
@@ -168,12 +180,39 @@ class MyLayout(Widget):
         self.canvas.ask_update()
 
         print(
-            f' {self.brand} {self.model} {self.year_from} {self.year_to} {self.mileage_from}, mileage to: {self.mileage_to} {self.transmission} {self.engine_vol} {self.fuel} {self.driven_wheels} {self.price_from} {self.price_to}')
+            f' {self.brand} {self.model} {self.year_from} {self.year_to} {self.mileage_from}: {self.mileage_to} {self.transmission} {self.engine_vol} {self.fuel} {self.driven_wheels} {self.price_from} {self.price_to}')
 
         self.clear_input_fields()
 
         scraping.conv_obj(self.brand, self.model, self.year_from, self.year_to, self.mileage_from, self.mileage_to, self.transmission,
                       self.engine_vol, self.fuel, self.driven_wheels, self.price_from, self.price_to)
+
+        db = dbms.CarDB("Car_DB.db")
+        self.ids.new_listings.clear_widgets()
+        records = db.extract_data()
+
+        for record in records:
+            car_info = ''
+            arr = list(record.values())
+            code = arr[-2]
+            del arr[-2]
+
+            for val in arr:
+                car_info += str(val) + " "
+
+            link_button = Button(text=car_info,
+                                 size_hint_y=None,
+                                 height=50
+                                 )
+            link_button.bind(on_press=partial(self.open_link, code))
+
+            self.ids.new_listings.add_widget(link_button)
+            self.canvas.ask_update()
+
+        self.ids.scroll_view.do_scroll_y = True
+        self.canvas.ask_update()
+
+
         pass
 
     def update(self):
