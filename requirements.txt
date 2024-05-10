@@ -1,5 +1,8 @@
 aioquic==1.0.0
 asgiref==3.8.1
+async==0.6.2
+async_gui==0.1.1
+asyncio==3.4.3
 attrs==23.2.0
 Automat==22.10.0
 beautifulsoup4==4.12.3
@@ -64,7 +67,9 @@ pluggy==1.5.0
 prettyprint==0.1.5
 Protego==0.3.1
 protobuf==5.26.1
+psutil==5.9.8
 publicsuffix2==2.20191221
+putils==0.2.3
 py==1.11.0
 pyasn1==0.6.0
 pyasn1_modules==0.4.0
@@ -72,7 +77,10 @@ pycparser==2.22
 PyDispatcher==2.0.7
 Pygments==2.17.2
 pylsqpack==0.3.18
+pync==2.0.3
 pynose==1.5.1
+pyobjc-core==10.2
+pyobjc-framework-Cocoa==10.2
 pyOpenSSL==24.1.0
 pyotp==2.9.0
 pyparsing==3.1.2

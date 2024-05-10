@@ -2,9 +2,9 @@
 
 ## Table of contents
 1. [Introduction](#introduction)
-   1. Installation
-   2. Usage
-   3. Project Requirements
+   1. [Installation](#installation)
+   2. [Usage](#usage)
+   3. [Project Requirements](#project-requirements)
 2. [Component overview](#component-overview)
    1. [Main class](#main-class)
    2. [Scraping](#scraping)
@@ -23,6 +23,21 @@ for many different services to get updates about new listing and reminders.
 We decided to make a tool that scrapes the 3 main platforms: [Autogidas](https://autogidas.lt "Autogidas car market"), 
 and [BRC](https://lt.brcauto.eu "BRC").
 Then, all 3 platforms will be checked at a desired interval for new listings. 
+
+### Installation
+
+1. Download the repository either as a .zip file or using `git clone`.
+2. Navigate to the root folder of the project and install the python libraries using `pip install -r requirements.txt`
+3. Depending on your operating system, if you have a MacOS device, install the `macos-notifications` library using pip: `pip install macos-notifications`. If you have a Windows device, use `pip install win10toast`.
+4. Navigate to the `dmbs.py` file and run it to create the database file with all the required tables.
+
+### Usage
+
+1. To launch the application, run `GUI.py`.
+2. Enter your desired make, model, and any additional search variables.
+3. Press "Add", this will do the initial scrape of the cars.
+4. Press "Update" after the initial scraping is done, to update the listings once again and start the interval checking.
+5. You will be reminded hourly to check for new car listings. 
 
 
 ### Project Requirements
@@ -223,10 +238,10 @@ Another thing we paid attention to was the checking part. Because it is obvious 
 ### Notifications
 Since system notifications play a crucial role in keeping users informed and engaged, we implemented them in our
 Python project to gain a deeper understanding of their functionalities. To provide a seamless user experience (UX)
-across different operating systems, we opted for a cross-platform notification approach. This allowed us to explore
+and make the application easier to use across different operating systems, we opted for a cross-platform notification approach. This allowed us to explore
 the nuances of notification systems while ensuring our application effectively delivers critical messages to users
 regardless of their platform. This not only improves the application's utility but also fosters a more consistent 
-and informative user experience.
+and informative user experience. 
 
 ***
 
@@ -237,7 +252,7 @@ challenge, we opted to integrate system notifications directly into our project.
 presented their own set of obstacles, we identified "plyer" as a leading library for this functionality. Unfortunately, 
 upon further investigation, we discovered that "plyer" is no longer actively maintained. To navigate this roadblock, we 
 adopted a dual-library approach. We implemented separate libraries tailored to specific operating systems, requiring 
-additional effort but ultimately ensuring consistent notification functionality across platforms.
+additional effort but ultimately ensuring consistent notification functionality across platforms. In our rush to finish NotiCar's development, we wanted to make our notifications more than just pretty decorations. We tried to use asyncio to make them functional, but it didn't work out. Luckily, we discovered that Kivy had its own tools for this. With some tweaks to our code, our notifications became more than just visuals – they now serve a real purpose in the user experience.
 
 A mild issue that we encountered while working on scrapting Autogidas, was the scrping being broken by Ads. During
 initial development, the scraping was developed and tested on a network that had dns-filtering (i.e. AdBlocking)

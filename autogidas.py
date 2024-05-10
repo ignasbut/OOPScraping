@@ -197,10 +197,13 @@ def scrape(driver, make):
 
 def captcha_accept(driver):
     pinfo("Looking for CAPTCHA")
-    if ec.presence_of_element_located((By.XPATH, xpaths["captcha_accept"])):
-        pinfo("CAPTCHA found")
-        driver.find_element(By.XPATH, xpaths["captcha_accept"]).click()
-        psuccess("CAPTCHA accepted")
+    try:
+        if ec.element_to_be_clickable((By.XPATH, xpaths["captcha_accept"])):
+            pinfo("CAPTCHA found")
+            driver.find_element(By.XPATH, xpaths["captcha_accept"]).click()
+            psuccess("CAPTCHA accepted")
+    except NoSuchElementException:
+        pinfo("CAPTCHA already accepted")
 
 
 def upload_to_db(obj_arr):
