@@ -2,9 +2,9 @@
 
 ## Table of contents
 1. [Introduction](#introduction)
-   1. Installation
-   2. Usage
-   3. Project Requirements
+   1. [Installation](#installation)
+   2. [Usage](#usage)
+   3. [Project Requirements](#project-requirements)
 2. [Component overview](#component-overview)
    1. [Main class](#main-class)
    2. [Scraping](#scraping)
@@ -23,6 +23,20 @@ for many different services to get updates about new listing and reminders.
 We decided to make a tool that scrapes the 3 main platforms: [Autogidas](https://autogidas.lt "Autogidas car market"), 
 and [BRC](https://lt.brcauto.eu "BRC").
 Then, all 3 platforms will be checked at a desired interval for new listings. 
+
+### Installation
+
+1. Download the repository either as a .zip file or using `git clone`.
+2. Navigate to the root folder of the project and install the python libraries using `pip install -r requirements.txt`
+3. Depending on your operating system, if you have a MacOS device, install the `macos-notifications` library using pip: `pip install macos-notifications`. If you have a Windows device, use `pip install win10toast`.
+4. Navigate to the `dmbs.py` file and run it to create the database file with all the required tables.
+
+### Usage
+
+1. To launch the application, run `GUI.py`.
+2. Enter your desired make, model, and any additional search variables.
+3. Press "Add", this will do the initial scrape of the cars.
+4. Press "Update" after the initial scraping is done, to update the listings once again and start the interval checking.
 
 
 ### Project Requirements
