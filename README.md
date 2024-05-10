@@ -37,6 +37,7 @@ Then, all 3 platforms will be checked at a desired interval for new listings.
 2. Enter your desired make, model, and any additional search variables.
 3. Press "Add", this will do the initial scrape of the cars.
 4. Press "Update" after the initial scraping is done, to update the listings once again and start the interval checking.
+5. You will be reminded hourly to check for new car listings. 
 
 
 ### Project Requirements
