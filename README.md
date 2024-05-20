@@ -34,10 +34,11 @@ Then, all 3 platforms will be checked at a desired interval for new listings.
 ### Usage
 
 1. To launch the application, run `GUI.py`.
-2. Enter your desired make, model, and any additional search variables.
-3. Press "Add", this will do the initial scrape of the cars.
-4. Press "Update" after the initial scraping is done, to update the listings once again and start the interval checking.
-5. You will be reminded hourly to check for new car listings. 
+   [GUI base.png](https://github.com/ignasbut/OOPScraping/blob/main/GUI%20snaps/GUI%20base.png)
+3. Enter your desired make, model, and any additional search variables.
+4. Press "Add", this will do the initial scrape of the cars.
+5. Press "Update" after the initial scraping is done, to update the listings once again and start the interval checking.
+6. You will be reminded hourly to check for new car listings. 
 
 
 ### Project Requirements
