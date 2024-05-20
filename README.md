@@ -35,10 +35,17 @@ Then, all 3 platforms will be checked at a desired interval for new listings.
 
 1. To launch the application, run `GUI.py`.
 <img width="499" alt="GUI base" src="https://github.com/ignasbut/OOPScraping/assets/154370264/72834b6b-d021-41dd-80bc-123d41ed2e8d">
-3. Enter your desired make, model, and any additional search variables.
-4. Press "Add", this will do the initial scrape of the cars.
-5. Press "Update" after the initial scraping is done, to update the listings once again and start the interval checking.
-6. You will be reminded hourly to check for new car listings. 
+2. Enter your desired make, model, and any additional search variables.
+<img width="499" alt="GUI input" src="https://github.com/ignasbut/OOPScraping/assets/154370264/810511bf-03c1-4a65-95af-957f7af3a535">
+
+3. Press "Add", this will do the initial scrape of the cars.
+<img width="499" alt="GUI added" src="https://github.com/ignasbut/OOPScraping/assets/154370264/88478cdf-fc84-4abe-a1db-d47d6fc300eb">
+
+4. Press "Update" after the initial scraping is done, to update the listings once again and start the interval checking.
+<img width="499" alt="GUI updated" src="https://github.com/ignasbut/OOPScraping/assets/154370264/ecc386c8-049b-43f5-982e-61866869a67b">
+
+5. You will be reminded hourly to check for new car listings. 
+<img width="499" alt="GUI   Noti" src="https://github.com/ignasbut/OOPScraping/assets/154370264/ee0ffadb-768c-4a1c-b89d-79142c8fd086">
 
 
 ### Project Requirements
