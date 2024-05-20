@@ -35,6 +35,7 @@ Then, all 3 platforms will be checked at a desired interval for new listings.
 
 1. To launch the application, run `GUI.py`.
 <img width="499" alt="GUI base" src="https://github.com/ignasbut/OOPScraping/assets/154370264/72834b6b-d021-41dd-80bc-123d41ed2e8d">
+
 2. Enter your desired make, model, and any additional search variables.
 <img width="499" alt="GUI input" src="https://github.com/ignasbut/OOPScraping/assets/154370264/810511bf-03c1-4a65-95af-957f7af3a535">
 
