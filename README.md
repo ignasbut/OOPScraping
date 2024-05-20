@@ -292,3 +292,6 @@ more mindful of not overloading the website with frequent requests while testing
 ***
 
 ## Results and conclusions
+In conclusion, our team is proud to say that the goals we set have been achieved. We managed to develop an app with a pleasant and easy user interface, which scrapes multiple car resale sites, obviously the user can choose from the various filters available. It was a particularly interesting challenge. We first tasted life as developers, but we also experienced working in a team.
+
+
