@@ -292,8 +292,8 @@ more mindful of not overloading the website with frequent requests while testing
 ***
 
 ## Results and conclusions
-In conclusion, our team is proud to say that the goals we set have been achieved. We managed to develop an app with a pleasant and easy user interface, which scrapes multiple car resale sites.The user can choose the car he prefers, with a vast range of optional filters, the program will print all the new ads, and by clicking on them you will be directed to the web page of the ad itself. For the moment the notifications are present but they are only a reminder to update the program in the event that there are new cars, this system has a one hour cycle.
+In conclusion, our team is proud to say that the goals we set have been achieved. We managed to develop an app with a easy user interface, which scrapes multiple car resale sites. The user can choose the car he prefers, with a vast range of optional filters, the program will print all the new ads, and by clicking on them you will be directed to the web page of the ad itself. For the moment the notifications are present but they are only a reminder to update the program in the event that there are new cars, this system has a one hour cycle.
 Future improvements include: changes to data storage, a nicer GUI and an optimized notification system.
-Working on this project was undoubtedly a very interesting challenge. We students have experienced, so to speak, the work of developers, in its various facets, improving and learning new knowledge in the field of programming. In addition we have learned what it means to work in a team, a skill considered very important in the workplace.
+Working on this project was undoubtedly a very interesting challenge. We have experienced, so to speak, the work of developers, in its various facets, improving and learning new knowledge in the field of programming. In addition we have learned what it means to work in a team, a skill considered very important in the workplace.
 We have undoubtedly gained many benefits from our work and we strongly believe in a possible future practical use of NOTICAR.
 
