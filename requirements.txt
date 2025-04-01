@@ -48,7 +48,7 @@ lxml==5.2.1
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
 mdurl==0.1.2
-mitmproxy==10.3.0
+mitmproxy>=11.1.2
 mitmproxy-macos==0.5.2
 mitmproxy_rs==0.5.2
 msgpack==1.0.8
